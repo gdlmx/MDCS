@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from modules import discover
 
 
 # FIXME: loaded two times (not a problem and may not happen in production)
@@ -9,4 +8,5 @@ class ModulesConfig(AppConfig):
     verbose_name = "Modules"
 
     def ready(self):
+        from modules import discover
         discover.discover_modules()

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from exporter import discover
+
 
 
 # TODO: loaded two times (not a problem and may not happen in production) 
@@ -9,4 +9,5 @@ class ExporterConfig(AppConfig):
     verbose_name = "Exporter"
 
     def ready(self):
+        from exporter import discover
         discover.discover_exporter()

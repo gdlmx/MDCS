@@ -15,7 +15,7 @@
 # Sponsor: National Institute of Standards and Technology (NIST)
 #
 ################################################################################
-from django.contrib.auth.models import Permission, Group
+
 from mgi.rights import *
 
 
@@ -25,6 +25,7 @@ def init_rules():
     If the anonymous group does not exist, creation of the group with associate permissions
     If the default group does not exist, creation of the group with associate permissions
     """
+    from django.contrib.auth.models import Permission, Group
     try:
         ###########################################
         #### Get or Create the Group anonymous ####

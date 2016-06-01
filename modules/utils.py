@@ -1,10 +1,10 @@
 import json
-from lxml import etree
 from django.utils.html import escape
-from lxml.etree import XMLSyntaxError
 
 
 def sanitize(input_value):
+    from lxml import etree
+    from lxml.etree import XMLSyntaxError
     input_type = type(input_value)
 
     if input_type == list:

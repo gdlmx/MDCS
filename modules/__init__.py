@@ -1,5 +1,4 @@
 import importlib
-from mgi.models import Module
 from django.template import Context, Template
 
 
@@ -12,6 +11,7 @@ def get_module_view(url):
     :param url:
     :return:
     """
+    from mgi.models import Module
     module = Module.objects.get(url=url)
     pkglist = module.view.split('.')
 
