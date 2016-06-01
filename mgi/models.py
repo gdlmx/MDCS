@@ -40,20 +40,20 @@ class Message(Document):
     email = EmailField()
     content = StringField()
 
-class Exporter(Document, EmbeddedDocument):
+class Exporter(Document):
     """Represents an exporter"""
     name = StringField(required=True, unique=True)
     url = StringField(required=True)
     available_for_all = BooleanField(required=True)
 
-class ExporterXslt(Document, EmbeddedDocument):
+class ExporterXslt(Document):
     """Represents an xslt file for exporter"""
     name = StringField(required=True, unique=True)
     filename = StringField(required=True)
     content = StringField(required=True)
     available_for_all = BooleanField(required=True)
 
-class ResultXslt(Document, EmbeddedDocument):
+class ResultXslt(Document):
     """Represents an xslt file for result representation"""
     name = StringField(required=True, unique=True)
     filename = StringField(required=True)
