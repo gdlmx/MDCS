@@ -20,8 +20,10 @@
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import redirect
-from django.core.servers.basehttp import FileWrapper
+
+from wsgiref.util import FileWrapper
 from cStringIO import StringIO
+
 from mgi.models import Template, TemplateVersion, XML2Download, Type, TypeVersion, Bucket
 from admin_mdcs.models import permission_required
 import mgi.rights as RIGHTS

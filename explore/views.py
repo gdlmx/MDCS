@@ -21,7 +21,7 @@ from django.conf import settings
 from mgi.models import TemplateVersion, Instance, SavedQuery, XMLdata, ExporterXslt
 import mgi.rights as RIGHTS
 from cStringIO import StringIO
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 import zipfile
 import lxml.etree as etree
 import os

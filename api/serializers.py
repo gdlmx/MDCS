@@ -15,7 +15,7 @@
 ################################################################################
 
 from rest_framework import serializers
-from rest_framework_mongoengine.serializers import MongoEngineModelSerializer
+from rest_framework_mongoengine.serializers import  DocumentSerializer
 from mgi.models import SavedQuery, Template, Type, TemplateVersion, TypeVersion, Instance
 
 ################################################################################
@@ -38,7 +38,7 @@ class jsonDataSerializer(serializers.Serializer):
 # Description:   Serializer for saved queries
 # 
 ################################################################################
-class savedQuerySerializer(MongoEngineModelSerializer):
+class savedQuerySerializer(DocumentSerializer):
     class Meta:
         model = SavedQuery
         
@@ -74,7 +74,7 @@ class querySerializer(serializers.Serializer):
 # Description:   Serializer for schema with dependencies
 # 
 ################################################################################
-class schemaSerializer(MongoEngineModelSerializer):
+class schemaSerializer(DocumentSerializer):
     class Meta:
         model = Template
         exclude = (['templateVersion','version','hash'])
@@ -176,7 +176,7 @@ class templateSerializer(serializers.Serializer):
 # Description:   Serializer for templates versions
 # 
 ################################################################################
-class TemplateVersionSerializer(MongoEngineModelSerializer):
+class TemplateVersionSerializer(DocumentSerializer):
     class Meta:
         model = TemplateVersion
 
@@ -187,7 +187,7 @@ class TemplateVersionSerializer(MongoEngineModelSerializer):
 # Description:   Serializer for types
 # 
 ################################################################################
-class typeSerializer(MongoEngineModelSerializer):
+class typeSerializer(DocumentSerializer):
     class Meta:
         model = Type
         exclude = (['typeVersion','version','hash'])
@@ -199,7 +199,7 @@ class typeSerializer(MongoEngineModelSerializer):
 # Description:   Serializer for types versions
 # 
 ################################################################################      
-class TypeVersionSerializer(MongoEngineModelSerializer):
+class TypeVersionSerializer(DocumentSerializer):
     class Meta:
         model = TypeVersion
 
@@ -227,7 +227,7 @@ class resTypeSerializer(serializers.Serializer):
 # Description:   Serializer for repository instance
 # 
 ################################################################################  
-class instanceSerializer(MongoEngineModelSerializer):
+class instanceSerializer(DocumentSerializer):
     class Meta:
         model = Instance
 
