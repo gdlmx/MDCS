@@ -1,9 +1,7 @@
 from mgi.models import FormData, FormElement
 from abc import ABCMeta, abstractmethod
 
-class XPathAccessor():
-    
-    __metaclass__ = ABCMeta
+class XPathAccessor(metaclass=ABCMeta):
     
     def __init__(self, request):
         try:
@@ -32,7 +30,7 @@ class XPathAccessor():
     def set_xpath_value(self, xpath, value):        
         form_element = self._get_element(xpath)
         html_id = form_element.html_id
-        if xpath in self.values.keys():
+        if xpath in list(self.values.keys()):
             raise XPathAccessorError('Same XPath set more than once.')
         else:
             self.values[html_id] = value
@@ -43,7 +41,7 @@ class XPathAccessor():
             # get data about the current form
             form_data = FormData.objects().get(pk=self._form_data_id)
             # get all elements from the current form
-            form_elements = FormElement.objects.filter(id__in=form_data.elements.values())          
+            form_elements = FormElement.objects.filter(id__in=list(form_data.elements.values()))          
             # check if the provided xpath is one of an element of the current form
             if xpath in form_elements.values_list('xml_xpath'):
                 return form_elements.get(xml_xpath=xpath)

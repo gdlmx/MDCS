@@ -3,15 +3,13 @@ from django.conf import settings
 from django.http import HttpResponse
 import json
 from rest_framework.status import HTTP_200_OK
-from exceptions import ModuleError
+from .exceptions import ModuleError
 from abc import ABCMeta, abstractmethod
 from modules.utils import sanitize
 from modules import render_module
 
 
-class Module(object):
-    __metaclass__ = ABCMeta
-    
+class Module(object, metaclass=ABCMeta):
     def __init__(self, scripts=list(), styles=list()):
         self.scripts = scripts
         self.styles = styles
@@ -50,11 +48,11 @@ class Module(object):
             template_data['module'] = self._get_module(request)
             template_data['display'] = self._get_display(request)
             template_data['result'] = sanitize(self._get_result(request))
-        except Exception, e:
+        except Exception as e:
             raise ModuleError('Something went wrong during module initialization: ' + e.message)
 
         # TODO Add additional checks
-        for key, val in template_data.items():
+        for key, val in list(template_data.items()):
             if val is None:
                 raise ModuleError('Variable '+key+' cannot be None. Module initialization cannot be completed.')
 
@@ -72,7 +70,7 @@ class Module(object):
         try:
             template_data['display'] = self._post_display(request)
             template_data['result'] = sanitize(self._post_result(request))
-        except Exception, e:
+        except Exception as e:
             raise ModuleError('Something went wrong during module update: ' + e.message)
 
         html_code = render_module(self.template, template_data)

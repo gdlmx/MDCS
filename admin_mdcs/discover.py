@@ -82,7 +82,7 @@ def init_rules():
         ##### END Get or Create the default group #
         ###########################################
 
-    except Exception, e:
-        print('ERROR : Impossible to init the rules : ' + e.message)
+    except Exception as e:
+        print(('ERROR : Impossible to init the rules : ' + e.message))
 
 

@@ -1,4 +1,4 @@
-from models import PositiveIntegerInputModule, ExampleAutoCompleteModule, ChemicalElementMappingModule, \
+from .models import PositiveIntegerInputModule, ExampleAutoCompleteModule, ChemicalElementMappingModule, \
     ListToGraphInputModule, CountriesModule, FlagModule, ChemicalElementCheckboxesModule
 
 def positive_integer(request):

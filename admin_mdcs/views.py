@@ -20,7 +20,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import redirect
 from mgi.models import Request, Message, PrivacyPolicy, TermsOfUse, Help, Template, TemplateVersion, Type, \
     TypeVersion, Module, Bucket, Instance, Exporter, ExporterXslt, ResultXslt
-from forms import UploadResultXSLTForm, PrivacyPolicyForm, TermsOfUseForm, HelpForm, RepositoryForm, RefreshRepositoryForm, UploadXSLTForm, UploadResultXSLTForm
+from .forms import UploadResultXSLTForm, PrivacyPolicyForm, TermsOfUseForm, HelpForm, RepositoryForm, RefreshRepositoryForm, UploadXSLTForm, UploadResultXSLTForm
 from django.contrib import messages
 import os
 from django.conf import settings
@@ -343,7 +343,7 @@ def add_repository(request):
                         else:
                             message = "Unable to get access to the remote instance using these parameters."
                             return render(request, 'admin/add_repository.html', {'form':form, 'action_result':message})
-                    except Exception, e:
+                    except Exception as e:
                         message = "Unable to get access to the remote instance using these parameters."
                         return render(request, 'admin/add_repository.html', {'form':form, 'action_result':message})
 
@@ -361,7 +361,7 @@ def add_repository(request):
                             message = "Error: " + eval(r.content)['detail']
                         else:
                             message = "Error: Unable to reach the remote API."
-                except Exception, e:
+                except Exception as e:
                     message = "Error: Unable to reach the remote API."
 
                 return render(request, 'admin/add_repository.html', {'form':form, 'action_result':message})
@@ -412,7 +412,7 @@ def refresh_repository(request):
                 else:
                     message = "Unable to get access to the remote instance using these parameters."
                     return render(request, 'admin/refresh_repository.html', {'form':form, 'action_result':message})
-            except Exception, e:
+            except Exception as e:
                 message = "Unable to get access to the remote instance using these parameters."
                 return render(request, 'admin/refresh_repository.html', {'form':form, 'action_result':message})
 
@@ -508,7 +508,7 @@ def modules(request):
             request.session['moduleTemplateContent'] = object.content
 
             request.session['moduleNamespaces'] = common.get_namespaces(BytesIO(str(object.content)))
-            for prefix, url in request.session['moduleNamespaces'].items():
+            for prefix, url in list(request.session['moduleNamespaces'].items()):
                 if (url == "{http://www.w3.org/2001/XMLSchema}"):
                     request.session['moduleDefaultPrefix'] = prefix
                     break
@@ -621,7 +621,7 @@ def manage_xslt(request, id=None):
 
                 if xslt_exporter != None:
                     Template.objects(exporters__all=[xslt_exporter]).update(push__XSLTFiles=xslt)
-        except NotUniqueError, e:
+        except NotUniqueError as e:
             return HttpResponseBadRequest('This XSLT name already exists. Please enter an other name.')
 
         messages.add_message(request, messages.INFO, 'XSLT saved with success.')
@@ -684,7 +684,7 @@ def edit_xslt(request, id=None):
                 return HttpResponseBadRequest('Please enter a different name.')
             else:
                 exporter.update(set__name=str(new_name))
-        except OperationError, e:
+        except OperationError as e:
             return HttpResponseBadRequest('This XSLT name already exists. Please enter an other name.')
 
         messages.add_message(request, messages.INFO, 'XSLT edited with success.')
@@ -719,7 +719,7 @@ def manage_result_xslt(request, id=None):
         #No exceptions, we can add it in DB
         try:
             ResultXslt(name=name, filename=xml_file.name, content=xml_data).save()
-        except NotUniqueError, e:
+        except NotUniqueError as e:
             return HttpResponseBadRequest('This XSLT name already exists. Please enter an other name.')
 
         messages.add_message(request, messages.INFO, 'XSLT saved with success.')
@@ -771,7 +771,7 @@ def edit_result_xslt(request, id=None):
                 return HttpResponseBadRequest('Please enter a different name.')
             else:
                 xslt.update(set__name=str(new_name))
-        except OperationError, e:
+        except OperationError as e:
             return HttpResponseBadRequest('This XSLT name already exists. Please enter an other name.')
 
         messages.add_message(request, messages.INFO, 'XSLT edited with success.')

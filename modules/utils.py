@@ -14,15 +14,15 @@ def sanitize(input_value):
 
         return clean_value
     elif input_type == dict:
-        return {sanitize(key): sanitize(val) for key, val in input_value.items()}
-    elif input_type == str or input_type == unicode:
+        return {sanitize(key): sanitize(val) for key, val in list(input_value.items())}
+    elif input_type == str or input_type == str:
         try:
             # XML cleaning
             xml_cleaner_parser = etree.XMLParser(remove_blank_text=True)
             xml_data = etree.fromstring(input_value, parser=xml_cleaner_parser)
 
             input_value = etree.tostring(xml_data)
-        except XMLSyntaxError, e:
+        except XMLSyntaxError as e:
             pass
 #             if e is not None and e.message is not None:
 #                 print 'Sanitizing XML (' + input_value + '): ' + e.message

@@ -18,7 +18,7 @@ import re
 from django.http import HttpResponse
 from django.conf import settings
 from io import BytesIO
-from cStringIO import StringIO
+from io import StringIO
 from mgi.models import Template, XMLdata, XML2Download, Module, MetaSchema
 from mgi.models import FormElement, XMLElement, FormData
 from mgi.settings import CURATE_MIN_TREE, CURATE_COLLAPSE
@@ -105,12 +105,12 @@ def validate_xml_data(request):
         # TODO: namespaces
         xmlString = common.manageNamespace(template_id, request.POST['xmlString'])          
         common.validateXMLDocument(template_id, xmlString)
-    except etree.XMLSyntaxError, xse:
+    except etree.XMLSyntaxError as xse:
         #xmlParseEntityRef exception: use of & < > forbidden
         message= "Validation Failed. </br> May be caused by : </br> - Syntax problem </br> - Use of forbidden symbols : '&' or '<' or '>'"
         response_dict = {'errors': message}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
-    except Exception, e:
+    except Exception as e:
         message= e.message.replace('"', '\'')
         response_dict = {'errors': message}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -131,12 +131,12 @@ def validate_xml_data(request):
 #
 ################################################################################
 def view_data(request):
-    print 'BEGIN def saveXMLData(request)'
+    print('BEGIN def saveXMLData(request)')
 
     request.session['formString'] = request.POST['form_content']
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
-    print 'END def saveXMLData(request)'
+    print('END def saveXMLData(request)')
 
 
 ################################################################################
@@ -150,7 +150,7 @@ def view_data(request):
 #
 ################################################################################
 def set_current_template(request):
-    print 'BEGIN def set_current_template(request)'
+    print('BEGIN def set_current_template(request)')
 
     template_id = request.POST['templateID']
 
@@ -171,7 +171,7 @@ def set_current_template(request):
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     request.session['xmlDocTree'] = etree.tostring(XMLtree)
 
-    print 'END def set_current_template(request)'
+    print('END def set_current_template(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -187,7 +187,7 @@ def set_current_template(request):
 #
 ################################################################################
 def set_current_user_template(request):
-    print 'BEGIN def setCurrentTemplate(request)'
+    print('BEGIN def setCurrentTemplate(request)')
 
     template_id = request.POST['templateID']
 
@@ -209,7 +209,7 @@ def set_current_user_template(request):
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     request.session['xmlDocTree'] = etree.tostring(XMLtree)
 
-    print 'END def setCurrentTemplate(request)'
+    print('END def setCurrentTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -223,13 +223,13 @@ def set_current_user_template(request):
 # 
 ################################################################################
 def verify_template_is_selected(request):
-    print 'BEGIN def verify_template_is_selected(request)'
+    print('BEGIN def verify_template_is_selected(request)')
     if 'currentTemplateID' in request.session:
         templateSelected = 'yes'
     else:
         templateSelected = 'no'
 
-    print 'END def verify_template_is_selected(request)'
+    print('END def verify_template_is_selected(request)')
 
     response_dict = {'templateSelected': templateSelected}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -1398,7 +1398,7 @@ def getElementType(element, xmlTree, namespace, defaultPrefix):
                     elementType = xmlTree.find(xpath)
                 return elementType
     except:
-        print "getElementType: Something went wrong" 
+        print("getElementType: Something went wrong") 
         return None
     return None
 
@@ -1692,7 +1692,7 @@ def generate_absent(request):
     namespace = namespaces[defaultPrefix]
 
     xpath_namespaces = {}
-    for prefix, ns in request.session['namespaces'].iteritems():
+    for prefix, ns in request.session['namespaces'].items():
         xpath_namespaces[prefix] = ns[1:-1]
 
     element = xmlDocTree.xpath(xml_element.xsd_xpath, namespaces=xpath_namespaces)[0]
@@ -1838,7 +1838,7 @@ def duplicate(request):
         namespace = namespaces[defaultPrefix]
         
         xpath_namespaces = {}
-        for prefix, ns in request.session['namespaces'].iteritems() :
+        for prefix, ns in request.session['namespaces'].items() :
             xpath_namespaces[prefix] = ns[1:-1]
     
         sequenceChild = xmlDocTree.xpath(xml_element.xsd_xpath, namespaces=xpath_namespaces)[0]
@@ -2080,7 +2080,7 @@ def duplicate(request):
 #
 ################################################################################
 def generateForm(request):
-    print 'BEGIN def generateForm(key,xmlElement)'
+    print('BEGIN def generateForm(key,xmlElement)')
      
     defaultPrefix = request.session['defaultPrefix']
     xmlDocTreeStr = request.session['xmlDocTree']
@@ -2131,7 +2131,7 @@ def generateForm(request):
             formString += "<div xmlID='root' name='xsdForm'>"
             formString += generateChoice(request, elements, xmlDocTree, namespace, edit_data_tree=edit_data_tree)
             formString += "</div>"
-    except Exception, e:
+    except Exception as e:
         formString = "UNSUPPORTED ELEMENT FOUND (" + e.message + ")" 
 
     # save the list of elements for the form
@@ -2177,7 +2177,7 @@ def init_curate(request):
 #
 ################################################################################
 def generate_xsd_form(request):
-    print 'BEGIN def generate_xsd_form(request)'
+    print('BEGIN def generate_xsd_form(request)')
 
     template_id = request.session['currentTemplateID']
     response_dict = {}
@@ -2204,7 +2204,7 @@ def generate_xsd_form(request):
     
     # find the namespaces
     request.session['namespaces'] = common.get_namespaces(BytesIO(str(xmlDocTree)))
-    for prefix, url in request.session['namespaces'].items():
+    for prefix, url in list(request.session['namespaces'].items()):
         if (url == "{http://www.w3.org/2001/XMLSchema}"):            
             request.session['defaultPrefix'] = prefix
             break
@@ -2217,7 +2217,7 @@ def generate_xsd_form(request):
     request.session['formString'] = formString
 
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
-    print 'END def generate_xsd_form(request)'
+    print('END def generate_xsd_form(request)')
 
 
 ################################################################################
@@ -2292,7 +2292,7 @@ def reinitOccurrences(request):
     # reinitialize the map of occurrences with original values
     occurrences = request.session['occurrences']
     
-    for elementID in occurrences.keys():
+    for elementID in list(occurrences.keys()):
         elementOccurrencesStr = occurrences[str(elementID)]
         if 'inf' in elementOccurrencesStr:
             elementOccurrencesStr = elementOccurrencesStr.replace('inf','float("inf")')
@@ -2304,7 +2304,7 @@ def reinitOccurrences(request):
             elementOccurrences['nbOccurrences'] = elementOccurrences['minOccurrences']
         else:
             elementOccurrences['nbOccurrences'] = 1
-        occurrences[str(elementID)] = unicode(elementOccurrences)
+        occurrences[str(elementID)] = str(elementOccurrences)
     
     request.session['occurrences'] = occurrences
 
@@ -2349,7 +2349,7 @@ def delete_form(request):
         try:
             form_data = FormData.objects().get(pk=form_data_id)
             # cascade delete references
-            for form_element_id in form_data.elements.values():
+            for form_element_id in list(form_data.elements.values()):
                 try:
                     form_element = FormElement.objects().get(pk=form_element_id)
                     if form_element.xml_element is not None:
@@ -2365,7 +2365,7 @@ def delete_form(request):
                     pass
             form_data.delete()
             messages.add_message(request, messages.INFO, 'Form deleted with success.')
-        except Exception, e:
+        except Exception as e:
             return HttpResponse({},status=400)
     return HttpResponse({})
 
@@ -2384,7 +2384,7 @@ def cancel_form(request):
         form_data_id = request.session['curateFormData']
         form_data = FormData.objects().get(pk=form_data_id)
         # cascade delete references
-        for form_element_id in form_data.elements.values():
+        for form_element_id in list(form_data.elements.values()):
             try:
                 form_element = FormElement.objects().get(pk=form_element_id)
                 if form_element.xml_element is not None:
@@ -2401,5 +2401,5 @@ def cancel_form(request):
         form_data.delete()
         messages.add_message(request, messages.INFO, 'Form deleted with success.')
         return HttpResponse({},status=204)
-    except Exception, e:
+    except Exception as e:
         return HttpResponse({},status=400)

@@ -37,7 +37,7 @@ from mgi import common
 # 
 ################################################################################
 def upload_object(request):
-    print 'BEGIN def upload_object(request)'
+    print('BEGIN def upload_object(request)')
 
     object_name = request.POST['objectName']
     object_filename = request.POST['objectFilename']
@@ -57,7 +57,7 @@ def upload_object(request):
     # is it a valid XML document ?
     try:            
         xmlTree = etree.parse(BytesIO(object_content.encode('utf-8')))
-    except Exception, e:
+    except Exception as e:
         response_dict['errors'] = "Not a valid XML document."
         response_dict['message'] = e.message.replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -85,7 +85,7 @@ def upload_object(request):
         try:
             # is it a valid XML schema ?
             xmlSchema = etree.XMLSchema(xmlTree)
-        except Exception, e:
+        except Exception as e:
             response_dict['errors'] = "Not a valid XML schema."
             response_dict['message'] = e.message.replace("'","")
             return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -106,7 +106,7 @@ def upload_object(request):
 # 
 ################################################################################
 def save_object(request):
-    print 'BEGIN def save_object(request)'
+    print('BEGIN def save_object(request)')
     
     objectName = None
     objectFilename = None 
@@ -185,7 +185,7 @@ def save_object(request):
 # 
 ################################################################################
 def resolve_dependencies(request):
-    print 'BEGIN def resolveDependencies(request)'
+    print('BEGIN def resolveDependencies(request)')
     dependencies = request.POST.getlist('dependencies[]')
      
     objectContent = None
@@ -242,7 +242,7 @@ def resolve_dependencies(request):
         request.session["uploadDependencies"] = dependencies
         message = "The uploaded template is valid. You can now save it." + saveBtn
         response_dict = {'message': message}
-    except Exception, e:
+    except Exception as e:
         response_dict = {'errorDependencies': e.message.replace("'", "")}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')      
 
@@ -259,7 +259,7 @@ def resolve_dependencies(request):
 # 
 ################################################################################
 def clear_object(request):
-    print 'BEGIN def clearObject(request)'
+    print('BEGIN def clearObject(request)')
     
     if 'uploadObjectName' in request.session:
         del request.session['uploadObjectName']
@@ -278,7 +278,7 @@ def clear_object(request):
     if 'uploadDependencies' in request.session: 
         del request.session['uploadDependencies']
         
-    print 'END def clearObject(request)'
+    print('END def clearObject(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -292,7 +292,7 @@ def clear_object(request):
 # 
 ################################################################################
 def clearVersion(request):
-    print 'BEGIN def clearVersion(request)'
+    print('BEGIN def clearVersion(request)')
     
     if 'uploadVersionValid' in request.session:
         del request.session['uploadVersionValid']
@@ -311,7 +311,7 @@ def clearVersion(request):
     if 'uploadDependencies' in request.session: 
         del request.session['uploadDependencies']
 
-    print 'END def clearVersion(request)'
+    print('END def clearVersion(request)')
 
 
 ################################################################################
@@ -360,7 +360,7 @@ def generateHtmlDependencyResolver(imports, includes):
 # 
 ################################################################################
 def delete_object(request):
-    print 'BEGIN def delete_object(request)'
+    print('BEGIN def delete_object(request)')
     object_id = request.POST['objectID']
     object_type = request.POST['objectType']
 
@@ -375,7 +375,7 @@ def delete_object(request):
     objectVersions.isDeleted = True
     objectVersions.save()
 
-    print 'END def delete_object(request)'
+    print('END def delete_object(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -446,7 +446,7 @@ def upload_version(request):
         # is it a valid XML document ?
         try:            
             xmlTree = etree.parse(BytesIO(versionContent.encode('utf-8')))
-        except Exception, e:
+        except Exception as e:
             response_dict['errors'] = "Not a valid XML document."
             response_dict['message'] = e.message.replace("'","")
             return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -474,7 +474,7 @@ def upload_version(request):
             try:
                 # is it a valid XML schema ?
                 xmlSchema = etree.XMLSchema(xmlTree)
-            except Exception, e:
+            except Exception as e:
                 response_dict['errors'] = "Not a valid XML schema."
                 response_dict['message'] = e.message.replace("'","")
                 return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -496,7 +496,7 @@ def upload_version(request):
 # 
 ################################################################################
 def save_version(request):
-    print 'BEGIN def saveVersion(request, objectType)'
+    print('BEGIN def saveVersion(request, objectType)')
     
     versionFilename = None 
     versionContent = None
@@ -976,7 +976,7 @@ def insert_module(request):
         
     # save the tree in the session
     request.session['moduleTemplateContent'] = etree.tostring(dom) 
-    print etree.tostring(element)
+    print(etree.tostring(element))
     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
@@ -1009,7 +1009,7 @@ def remove_module(request):
     
     # remove prefix from namespaces
     nsmap = element.nsmap
-    for prefix, ns in nsmap.iteritems():
+    for prefix, ns in nsmap.items():
         if ns == 'http://mdcs.ns':
             del nsmap[prefix]
             break
@@ -1019,7 +1019,7 @@ def remove_module(request):
     
     # save the tree in the session
     request.session['moduleTemplateContent'] = etree.tostring(dom) 
-    print etree.tostring(element)
+    print(etree.tostring(element))
     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
     

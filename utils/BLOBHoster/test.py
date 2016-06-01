@@ -4,7 +4,7 @@ import base64
 
 class TestGridFS(unittest.TestCase):
     def setUp(self):
-        print "In method ", self._testMethodName
+        print("In method ", self._testMethodName)
         BLOB_HOSTER = 'GridFS'
         BLOB_HOSTER_USER = "mgi_user"
         BLOB_HOSTER_PSWD = "mgi_password"

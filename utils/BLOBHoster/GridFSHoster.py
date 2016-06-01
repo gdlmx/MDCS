@@ -11,11 +11,11 @@
 #
 ################################################################################
 
-from BLOBHoster import BLOBHoster
+from .BLOBHoster import BLOBHoster
 
 from pymongo import MongoClient
 import gridfs
-from urlparse import urlparse
+from urllib.parse import urlparse
 from bson.objectid import ObjectId
 
 class GridFSHoster(BLOBHoster):

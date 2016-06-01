@@ -23,9 +23,7 @@ import lxml.etree as etree
 from io import BytesIO
 from abc import ABCMeta, abstractmethod
 
-class XSDFlattener(object):
-	
-	__metaclass__ = ABCMeta
+class XSDFlattener(object, metaclass=ABCMeta):
 	
 	def __init__(self, xmlString):
 		self.xmlString = xmlString

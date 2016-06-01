@@ -20,7 +20,7 @@
 from exporter.builtin.models import Exporter
 import lxml.etree as etree
 import os
-from cStringIO import StringIO
+from io import StringIO
 import matplotlib.pyplot as plt
 
 

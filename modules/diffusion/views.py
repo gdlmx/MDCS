@@ -1,4 +1,4 @@
-from models import PeriodicTableModule, PeriodicTableMultipleModule, ExcelUploaderModule
+from .models import PeriodicTableModule, PeriodicTableMultipleModule, ExcelUploaderModule
 
 
 def periodic_table_view(request):

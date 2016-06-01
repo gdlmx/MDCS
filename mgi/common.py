@@ -1,7 +1,7 @@
 
 import lxml.etree as etree
 from mgi.models import MetaSchema, Template
-from cStringIO import StringIO
+from io import StringIO
 
 ################################################################################
 # 

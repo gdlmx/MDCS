@@ -14,7 +14,7 @@
 #
 ################################################################################
 
-from cStringIO import StringIO
+from io import StringIO
 from django.http import HttpResponse
 from django.template import RequestContext, loader, Context
 from django.shortcuts import redirect
@@ -105,7 +105,7 @@ def curate_edit_data(request):
         previous_forms = FormData.objects(user=str(request.user.id), xml_data_id__exists=True)
         for previous_form in previous_forms:
             # cascade delete references
-            for form_element_id in previous_form.elements.values():
+            for form_element_id in list(previous_form.elements.values()):
                 try:
                     form_element = FormElement.objects().get(pk=form_element_id)
                     if form_element.xml_element is not None:
@@ -181,7 +181,7 @@ def curate_from_schema(request):
 ################################################################################
 @permission_required(content_type=RIGHTS.curate_content_type, permission=RIGHTS.curate_access, login_url='/login')
 def curate_enter_data(request):
-    print "BEGIN curate_enter_data(request)"
+    print("BEGIN curate_enter_data(request)")
    
     try:
         context = RequestContext(request, {})
@@ -197,7 +197,7 @@ def curate_enter_data(request):
         template = loader.get_template('curate/curate_enter_data.html')
         
         return HttpResponse(template.render(context))
-    except MDCSError, e:
+    except MDCSError as e:
         template = loader.get_template('curate/errors.html')
         context = RequestContext(request, {
             'errors': e.message,
@@ -391,7 +391,7 @@ def start_curate(request):
                 else:
                     return HttpResponse(template.render(context))
 
-            except MDCSError, e:
+            except MDCSError as e:
                 template = loader.get_template('curate/errors.html')
                 context = RequestContext(request, {
                     'errors': e.message,
@@ -435,7 +435,7 @@ def save_xml_data_to_db(request):
                 try:
                     form_data = FormData.objects().get(pk=form_data_id)
                     # cascade delete references
-                    for form_element_id in form_data.elements.values():
+                    for form_element_id in list(form_data.elements.values()):
                         try:
                             form_element = FormElement.objects().get(pk=form_element_id)
                             if form_element.xml_element is not None:
@@ -450,10 +450,10 @@ def save_xml_data_to_db(request):
                             # raise an exception when element not found
                             pass
                     form_data.delete()
-                except Exception, e:
+                except Exception as e:
                     return HttpResponseBadRequest('Unable to save data.')
                 return HttpResponse('ok')
-            except Exception, e:
+            except Exception as e:
                 message = e.message.replace('"', '\'')
                 return HttpResponseBadRequest(message)
         else:

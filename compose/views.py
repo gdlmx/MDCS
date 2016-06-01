@@ -22,7 +22,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import redirect
 
 from wsgiref.util import FileWrapper
-from cStringIO import StringIO
+from io import StringIO
 
 from mgi.models import Template, TemplateVersion, XML2Download, Type, TypeVersion, Bucket
 from admin_mdcs.models import permission_required
@@ -86,7 +86,7 @@ def compose_build_template(request):
             hasBucket = False
             for bucket in buckets:
                 if str(type_version.id) in bucket.types:
-                    if bucket not in bucketsTypes.keys():
+                    if bucket not in list(bucketsTypes.keys()):
                         bucketsTypes[bucket] = []
                     bucketsTypes[bucket].append(Type.objects.get(pk=type_version.current))
                     hasBucket = True

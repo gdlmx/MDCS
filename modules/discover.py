@@ -1,4 +1,4 @@
-import urls
+from . import urls
 import re
 from django.core.urlresolvers import RegexURLResolver, RegexURLPattern
 from django.contrib.admindocs.views import simplify_regex
@@ -64,7 +64,7 @@ def __flatten_patterns_tree__(patterns, prefix='', filter_path=None, excluded=[]
 def discover_modules():
     patterns = __flatten_patterns_tree__(urls.urlpatterns, excluded=urls.excluded)
     for pattern in patterns:
-        print pattern
+        print(pattern)
 
     # Remove all existing modules
     Module.objects.all().delete()
@@ -78,7 +78,7 @@ def discover_modules():
         raise ModuleError('A validation error occured during the module discovery. Please provide a name to all modules urls using the name argument.')
         # something went wrong, delete already added modules
         Module.objects.all().delete()
-    except Exception, e:
+    except Exception as e:
         raise e
         # something went wrong, delete already added modules
         Module.objects.all().delete()

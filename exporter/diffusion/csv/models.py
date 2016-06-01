@@ -57,7 +57,7 @@ class CSVExporter(XSLTExporter):
                     result['title'] = os.path.splitext(result['title'])[0]
                     try:
                         data = xml.split("\t\t\n")
-                        data = filter(None, data)
+                        data = [_f for _f in data if _f]
                         if len(data) == 1:
                             returnTransformation.append({'title':result['title'], 'content': str(data[0])})
                         else:
