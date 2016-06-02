@@ -40,7 +40,7 @@ import operator
 import json
 import xmltodict
 from collections import OrderedDict
-from StringIO import StringIO
+from io import BytesIO
 from django.http.response import HttpResponse
 from utils.XSDhash import XSDhash
 from io import BytesIO
@@ -57,6 +57,7 @@ import zipfile
 import mongoengine.errors as MONGO_ERRORS
 from admin_mdcs.models import api_permission_required, api_staff_member_required
 import mgi.rights as RIGHTS
+from functools import reduce
 
 ################################################################################
 # 
@@ -134,7 +135,7 @@ def select_savedquery(request):
                 query['displayedQuery'] = re.compile(displayedQuery[1:-1])
             else:
                 query['displayedQuery'] = displayedQuery
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No parameters given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -298,7 +299,7 @@ def explore_detail(request):
                 query['title'] = re.compile(title[1:-1])
             else:
                 query['title'] = title
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No parameters given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -344,7 +345,7 @@ def explore_detail_data_download(request):
         query = dict()
         if id is not None:
             query['_id'] = ObjectId(id)
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No parameters given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -356,13 +357,13 @@ def explore_detail_data_download(request):
             if dataformat== None or dataformat=="xml":
                 jsonData['content'] = xmltodict.unparse(jsonData['content'])
                 contentEncoded = jsonData['content'].encode('utf-8')
-                fileObj = StringIO(contentEncoded)
+                fileObj = BytesIO(contentEncoded)
                 response = HttpResponse(fileObj, content_type='application/xml')
                 response['Content-Disposition'] = 'attachment; filename=' + filename
                 return response
             elif dataformat == "json":
                 contentEncoded = json.dumps(jsonData['content'])
-                fileObj = StringIO(contentEncoded)
+                fileObj = BytesIO(contentEncoded)
                 response = HttpResponse(fileObj, content_type='application/json')
                 response['Content-Disposition'] = 'attachment; filename=' + filename
                 return response
@@ -395,7 +396,7 @@ def explore_delete(request):
         query = dict()
         if id is not None:            
             query['_id'] = ObjectId(id)            
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No id given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -416,11 +417,11 @@ def explore_delete(request):
 # 
 ################################################################################
 def manageRegexInAPI(query):
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 manageRegexInAPI(subValue)
-        elif isinstance(value, str) or isinstance(value, unicode):
+        elif isinstance(value, str) or isinstance(value, str):
             if (len(value) >= 2 and value[0] == "/" and value[-1] == "/"):
                 query[key] = re.compile(value[1:-1])
         elif isinstance(value, dict):
@@ -556,7 +557,7 @@ def curate(request):
         try:
             try:
                 common.validateXMLDocument(schema.id, xmlStr)
-            except etree.XMLSyntaxError, xse:
+            except etree.XMLSyntaxError as xse:
                 #xmlParseEntityRef exception: use of & < > forbidden
                 content= {'message': "Validation Failed. May be caused by : Syntax problem, use of forbidden symbols like '&' or '<' or '>'"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -756,7 +757,7 @@ def select_schema(request):
                 query['hash'] = re.compile(hash[1:-1])
             else:
                 query['hash'] = hash
-        q_list = {Q(**({key:value})) for key, value in query.iteritems()}
+        q_list = {Q(**({key:value})) for key, value in query.items()}
         if len(q_list) > 0:
             try:
                 templates = Template.objects(reduce(operator.and_, q_list)).all()
@@ -764,7 +765,7 @@ def select_schema(request):
                 if len(templates) == 0:
                     content = {'message':'No template found with the given parameters.'}
                     return Response(content, status=status.HTTP_404_NOT_FOUND)
-            except Exception, e:
+            except Exception as e:
                 content = {'message':'No template found with the given parameters.'}
                 return Response(content, status=status.HTTP_404_NOT_FOUND)
         else:
@@ -1207,7 +1208,7 @@ def select_type(request):
                 query['typeVersion'] = re.compile(typeVersion[1:-1])
             else:
                 query['typeVersion'] = typeVersion
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No parameters given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -1552,7 +1553,7 @@ def select_repository(request):
         if port is not None:
             query['port'] = port
 
-        if len(query.keys()) == 0:
+        if len(list(query.keys())) == 0:
             content = {'message':'No parameters given.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -1937,7 +1938,7 @@ def get_dependency(request):
                 content = type.content
             
             xsdEncoded = content.encode('utf-8')
-            fileObj = StringIO(xsdEncoded)
+            fileObj = BytesIO(xsdEncoded)
             response = HttpResponse(fileObj, content_type='application/xml')
             response['Content-Disposition'] = 'attachment; filename=' + str(id)
             return response
@@ -2064,7 +2065,7 @@ def select_exporter(request):
             else:
                 query['name'] = name
 
-        q_list = {Q(**({key:value})) for key, value in query.iteritems()}
+        q_list = {Q(**({key:value})) for key, value in query.items()}
         if len(q_list) > 0:
             try:
                 exporters = Exporter.objects(name__ne='XSLT').filter(reduce(operator.and_, q_list))
@@ -2084,7 +2085,7 @@ def select_exporter(request):
         data = serializer.data + serializerXSLT.data
 
         return Response(data, status=status.HTTP_200_OK)
-    except Exception, e:
+    except Exception as e:
         content = {'message':'No exporter found with the given parameters.'}
         return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -2133,7 +2134,7 @@ def add_xslt(request):
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            except NotUniqueError, e:
+            except NotUniqueError as e:
                 content = {'message: This XSLT name already exists. Please enter an other name.'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -2215,13 +2216,13 @@ def export(request):
             try:
                 exporter = Exporter.objects.get(pk=idExporter)
                 exporter = get_exporter(exporter.url)
-            except MONGO_ERRORS.DoesNotExist, e:
+            except MONGO_ERRORS.DoesNotExist as e:
                 #Exporter not found in standard exporters collection.
                 #XSLT exporter
                 try:
                     xslt = ExporterXslt.objects.get(pk=idExporter)
                     exporter = XSLTExporter(xslt.content)
-                except MONGO_ERRORS.DoesNotExist, e:
+                except MONGO_ERRORS.DoesNotExist as e:
                     content = {'message: No exporter found with the given id.'}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
@@ -2240,7 +2241,7 @@ def export(request):
                     content = {'message' : 'Unable to export data in JSON. Could be a format issue'}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
             elif dataformat=="zip":
-                in_memory = StringIO()
+                in_memory = BytesIO()
                 zip = zipfile.ZipFile(in_memory, "a")
                 exporter._transformAndZip(None, dataXML, zip)
                 zip.close()
@@ -2254,7 +2255,7 @@ def export(request):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
             return response
-        except Exporter, e:
+        except Exporter as e:
             content = {'message: Unable to export data.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 

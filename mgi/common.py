@@ -1,7 +1,7 @@
 
 import lxml.etree as etree
 from mgi.models import MetaSchema, Template
-from cStringIO import StringIO
+from io import BytesIO
 
 ################################################################################
 # 
@@ -86,12 +86,12 @@ def validateXMLDocument(templateID, xmlString):
         templateObject = Template.objects.get(pk=templateID)
         xmlDocData = templateObject.content
     
-    xmlTree = etree.parse(StringIO(xmlDocData.encode('utf-8')))
+    xmlTree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     
     xmlSchema = etree.XMLSchema(xmlTree)    
     xmlDoc = etree.XML(str(xmlString.encode('utf-8')))
     prettyXMLString = etree.tostring(xmlDoc, pretty_print=True)  
-    xmlSchema.assertValid(etree.parse(StringIO(prettyXMLString)))
+    xmlSchema.assertValid(etree.parse(BytesIO(prettyXMLString)))
     
 
 ################################################################################
@@ -111,11 +111,11 @@ def manageNamespace(templateID, xmlString):
     if str(templateID) not in MetaSchema.objects.all().values_list('schemaId'):
         templateObject = Template.objects.get(pk=templateID)
         templateData = templateObject.content    
-        templateTree = etree.parse(StringIO(templateData.encode('utf-8')))
+        templateTree = etree.parse(BytesIO(templateData.encode('utf-8')))
         templateTreeRoot = templateTree.getroot()
         # The schema is using a target namespace
         if 'targetNamespace' in templateTreeRoot.attrib:    
-            xmlTree = etree.parse(StringIO(xmlString.encode('utf-8')))
+            xmlTree = etree.parse(BytesIO(xmlString.encode('utf-8')))
             xmlRoot = xmlTree.getroot()
             xmlRoot.attrib['xmlns'] = templateTreeRoot.attrib['targetNamespace']
             xmlString = etree.tostring (xmlTree).decode('utf-8')

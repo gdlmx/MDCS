@@ -20,7 +20,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from mgi.models import TemplateVersion, Instance, SavedQuery, XMLdata, ExporterXslt
 import mgi.rights as RIGHTS
-from cStringIO import StringIO
+from io import BytesIO
 from wsgiref.util import FileWrapper
 import zipfile
 import lxml.etree as etree
@@ -323,7 +323,7 @@ def explore_detail_result_process(request) :
                 newdom = shortTransform(dom)
             else:
                 newdom = transform(dom)
-    except Exception, e:
+    except Exception as e:
         #We use the default one
         newdom = transform(dom)
 
@@ -353,7 +353,7 @@ def start_export(request):
         listId = request.session['listIdToExport']
         xmlResults = []
         #Creation of ZIP file
-        in_memory = StringIO()
+        in_memory = BytesIO()
         zip = zipfile.ZipFile(in_memory, "a")
         is_many_inst = len(instances) > 1
         for instance in instances:

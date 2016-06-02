@@ -20,7 +20,7 @@
 from exporter.builtin.models import Exporter
 import lxml.etree as etree
 import os
-from cStringIO import StringIO
+from io import BytesIO
 import matplotlib.pyplot as plt
 
 
@@ -66,7 +66,7 @@ class GRAPHExporter(Exporter):
                                 plt.plot(list(x), list(y), marker='+', mec='b', mew=1, linestyle='--', color='r', lw=0.4)
                                 plt.grid(True)
                                 fig = plt.gcf()
-                                imgdata = StringIO()
+                                imgdata = BytesIO()
                                 fig.savefig(imgdata, format='png')
                                 plt.close()
                                 # rewind the data
