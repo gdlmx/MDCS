@@ -118,7 +118,7 @@ def manageNamespace(templateID, xmlString):
             xmlTree = etree.parse(StringIO(xmlString.encode('utf-8')))
             xmlRoot = xmlTree.getroot()
             xmlRoot.attrib['xmlns'] = templateTreeRoot.attrib['targetNamespace']
-            xmlString = etree.tostring(xmlTree)
+            xmlString = etree.tostring (xmlTree).decode('utf-8')
 
     return xmlString
 

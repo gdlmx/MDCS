@@ -21,8 +21,8 @@ def sanitize(input_value):
             xml_cleaner_parser = etree.XMLParser(remove_blank_text=True)
             xml_data = etree.fromstring(input_value, parser=xml_cleaner_parser)
 
-            input_value = etree.tostring(xml_data)
-        except XMLSyntaxError, e:
+            input_value = etree.tostring (xml_data).decode('utf-8')
+        except XMLSyntaxError as e:
             pass
 #             if e is not None and str(e) is not None:
 #                 print 'Sanitizing XML (' + input_value + '): ' + str(e)

@@ -129,7 +129,7 @@ class PeriodicTableMultipleModule(PopupModule):
             if len(request.GET['data']) > 0:
                 constituents = etree.XML(request.GET['data'])
                 for constituent in constituents:
-                    result += etree.tostring(constituent)
+                    result += etree.tostring (constituent).decode('utf-8')
                 return result
             else:
                 return ''
@@ -216,7 +216,7 @@ class ExcelUploaderModule(PopupModule):
     
                 headers = xml_table[0]
                 for header in headers.iter('column'):
-                    print etree.tostring(header)
+                    print(etree.tostring (header).decode('utf-8'))
                     self.table['headers'].append(header.text)
     
                 values = xml_table[1]
@@ -294,8 +294,8 @@ class ExcelUploaderModule(PopupModule):
 
             row_index += 1
 
-        xml_string = etree.tostring(header)
-        xml_string += etree.tostring(values)
+        xml_string = etree.tostring (header).decode('utf-8')
+        xml_string += etree.tostring (values).decode('utf-8')
 
         return xml_string
 
@@ -325,7 +325,7 @@ class ExcelUploaderModule(PopupModule):
         div.set('class', 'excel_table')
         div.append(table)
 
-        return etree.tostring(div)
+        return etree.tostring (div).decode('utf-8')
 
     def _post_display(self, request):
         form = ExcelUploaderForm(request.POST, request.FILES)

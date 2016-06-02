@@ -154,7 +154,7 @@ def setCurrentTemplate(request, template_id):
         xmlDocData = templateObject.content
 
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
-    request.session['xmlDocTreeExplore'] = etree.tostring(XMLtree)
+    request.session['xmlDocTreeExplore'] = etree.tostring (XMLtree).decode('utf-8')
 
     print 'END def setCurrentTemplate(request)'
     return HttpResponse(json.dumps({}), content_type='application/javascript')
@@ -191,7 +191,7 @@ def set_current_user_template(request):
 
 
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
-    request.session['xmlDocTreeExplore'] = etree.tostring(XMLtree)
+    request.session['xmlDocTreeExplore'] = etree.tostring (XMLtree).decode('utf-8')
 
     print 'END def setCurrentTemplate(request)'
     return HttpResponse(json.dumps({}), content_type='application/javascript')

@@ -184,7 +184,7 @@ def load_xml(request):
     transform = etree.XSLT(xslt)
     xmlTree = ""
     if (xmlString != ""):
-        request.session['namespacesCompose'] = common.get_namespaces(BytesIO(str(xmlString).encode('utf-8')))
+        request.session['namespacesCompose'] = common.get_namespaces(BytesIO(xmlString.encode("UTF-8")))
         for prefix, url in list(request.session['namespacesCompose'].items()):
             if (url == "{http://www.w3.org/2001/XMLSchema}"):            
                 request.session['defaultPrefixCompose'] = prefix
@@ -246,8 +246,8 @@ def insert_element_sequence(request):
         dom.getroot().insert(0,etree.Element(namespace+"include", attrib={'schemaLocation':includeURL}))
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom) 
-    print etree.tostring(dom)
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8') 
+    print(etree.tostring (dom).decode('utf-8'))
     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
@@ -276,7 +276,7 @@ def rename_element(request):
     dom.find(xpath).attrib['name'] = new_name
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom) 
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8') 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
     
 
@@ -301,7 +301,7 @@ def save_template(request):
         response_dict['errors'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
-    flattener = XSDFlattenerMDCS(etree.tostring(xmlTree))
+    flattener = XSDFlattenerMDCS(etree.tostring (xmlTree).decode('utf-8'))
     flatStr = flattener.get_flat()
     flatTree = etree.fromstring(flatStr)
     
@@ -361,8 +361,8 @@ def save_type(request):
         # this is a type: remove the root element to only keep the type
         root = xmlTree.find("{http://www.w3.org/2001/XMLSchema}element")
         root.getparent().remove(root)
-        content = etree.tostring(xmlTree)
-    except Exception, e:
+        content = etree.tostring (xmlTree).decode('utf-8')
+    except Exception as e:
         response_dict['errors'] = "Not a valid XML document."
         response_dict['message'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -454,7 +454,7 @@ def set_occurrences(request):
     element.attrib['maxOccurs'] = maxOccurs
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom) 
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8') 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -482,7 +482,7 @@ def delete_element(request):
     toRemove.getparent().remove(toRemove)
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom)     
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8')     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -514,7 +514,7 @@ def change_root_type_name(request):
     dom.find(xpathRootType).attrib['name'] = type_name
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom) 
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -542,6 +542,6 @@ def change_xsd_type(request):
     dom.find(xpath).tag = namespace + new_type
     
     # save the tree in the session
-    request.session['newXmlTemplateCompose'] = etree.tostring(dom) 
+    request.session['newXmlTemplateCompose'] = etree.tostring (dom).decode('utf-8') 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
     

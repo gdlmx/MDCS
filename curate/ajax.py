@@ -169,7 +169,7 @@ def set_current_template(request):
         xmlDocData = templateObject.content
 
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
-    request.session['xmlDocTree'] = etree.tostring(XMLtree)
+    request.session['xmlDocTree'] = etree.tostring (XMLtree).decode('utf-8')
 
     print 'END def set_current_template(request)'
     return HttpResponse(json.dumps({}), content_type='application/javascript')
@@ -207,7 +207,7 @@ def set_current_user_template(request):
         xmlDocData = templateObject.content
 
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
-    request.session['xmlDocTree'] = etree.tostring(XMLtree)
+    request.session['xmlDocTree'] = etree.tostring (XMLtree).decode('utf-8')
 
     print 'END def setCurrentTemplate(request)'
     return HttpResponse(json.dumps({}), content_type='application/javascript')
@@ -1025,7 +1025,7 @@ def get_Xml_element_data(xsd_element, xml_element, namespace):
             else:
                 reload_data = ''
         else: # branch: get the whole branch
-            reload_data = etree.tostring(xml_element)
+            reload_data = etree.tostring (xml_element).decode('utf-8')
     elif xsd_element.tag == "{0}attribute".format(namespace):
         pass
     elif xsd_element.tag == "{0}complexType".format(namespace) or xsd_element.tag == "{0}simpleType".format(namespace):
@@ -1037,7 +1037,7 @@ def get_Xml_element_data(xsd_element, xml_element, namespace):
                 reload_data = ''
         else: # branch: get the whole branch
             try:
-                reload_data = etree.tostring(xml_element)
+                reload_data = etree.tostring (xml_element).decode('utf-8')
             except:
                 reload_data = str(xml_element)
             
@@ -2199,7 +2199,7 @@ def generate_xsd_form(request):
             xmlDocData = templateObject.content
 
         xmlDocTree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
-        request.session['xmlDocTree'] = etree.tostring(xmlDocTree)
+        request.session['xmlDocTree'] = etree.tostring (xmlDocTree).decode('utf-8')
         xmlDocTree = request.session['xmlDocTree']   
     
     # find the namespaces

@@ -30,7 +30,7 @@ def get_hash(xmlString):
 	annotations = xmlTree.findall(".//{http://www.w3.org/2001/XMLSchema}annotation")
 	for annotation in annotations:
 		annotation.getparent().remove(annotation)
-	cleanXmlString = etree.tostring(xmlTree)
+	cleanXmlString = etree.tostring (xmlTree).decode('utf-8')
 	
 	# transform into dict and order it
 	xmlDict = xmltodict.parse(cleanXmlString, dict_constructor=dict)

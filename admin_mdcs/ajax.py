@@ -226,19 +226,19 @@ def resolve_dependencies(request):
         includes[idxInclude].attrib['schemaLocation'] = getSchemaLocation(request, str(dependency))
         idxInclude += 1            
      
-#         flattener = XSDFlattenerURL(etree.tostring(xmlTree),'admin','admin')
-    flattener = XSDFlattenerMDCS(etree.tostring(xmlTree))
+#         flattener = XSDFlattenerURL(etree.tostring (xmlTree).decode('utf-8'),'admin','admin')
+    flattener = XSDFlattenerMDCS(etree.tostring (xmlTree).decode('utf-8'))
     flatStr = flattener.get_flat()
     flatTree = etree.fromstring(flatStr)
     
     try:
         # is it a valid XML schema ?
         xmlSchema = etree.XMLSchema(flatTree)
-#         request.session[contentSession] = etree.tostring(xmlTree)
+#         request.session[contentSession] = etree.tostring (xmlTree).decode('utf-8')
         request.session[validSession] = True
         
         request.session[flatSession] = flatStr
-        request.session[apiSession] = etree.tostring(xmlTree)
+        request.session[apiSession] = etree.tostring (xmlTree).decode('utf-8')
         request.session["uploadDependencies"] = dependencies
         message = "The uploaded template is valid. You can now save it." + saveBtn
         response_dict = {'message': message}
@@ -975,8 +975,8 @@ def insert_module(request):
     element.attrib['{http://mdcs.ns}_mod_mdcs_'] =  module.url
         
     # save the tree in the session
-    request.session['moduleTemplateContent'] = etree.tostring(dom) 
-    print etree.tostring(element)
+    request.session['moduleTemplateContent'] = etree.tostring (dom).decode('utf-8') 
+    print(etree.tostring (element).decode('utf-8'))
     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
@@ -1018,8 +1018,8 @@ def remove_module(request):
     element = etree.Element(element.tag, nsmap = nsmap);
     
     # save the tree in the session
-    request.session['moduleTemplateContent'] = etree.tostring(dom) 
-    print etree.tostring(element)
+    request.session['moduleTemplateContent'] = etree.tostring (dom).decode('utf-8') 
+    print(etree.tostring (element).decode('utf-8'))
     
     return HttpResponse(json.dumps({}), content_type='application/javascript')
     

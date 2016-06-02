@@ -630,14 +630,14 @@ def add_schema(request):
                     else:
                         content = {'message':'One or more dependencies can not be found in the database.'}
                         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-                flattener = XSDFlattenerMDCS(etree.tostring(xmlTree))
+                flattener = XSDFlattenerMDCS(etree.tostring (xmlTree).decode('utf-8'))
                 flatStr = flattener.get_flat()
                 flatTree = etree.fromstring(flatStr)
                 # is this a valid XML schema?
                 try:
                     xmlSchema = etree.XMLSchema(flatTree)
                     xsdFlatContent = flatStr
-                    xsdAPIContent = etree.tostring(xmlTree)
+                    xsdAPIContent = etree.tostring (xmlTree).decode('utf-8')
                 except Exception as e:
                     content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -1085,14 +1085,14 @@ def add_type(request):
                     else:
                         content = {'message':'One or more dependencies can not be found in the database.'}
                         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-                flattener = XSDFlattenerMDCS(etree.tostring(xmlTree))
+                flattener = XSDFlattenerMDCS(etree.tostring (xmlTree).decode('utf-8'))
                 flatStr = flattener.get_flat()
                 flatTree = etree.fromstring(flatStr)
                 # is this a valid XML schema?
                 try:
                     xmlSchema = etree.XMLSchema(flatTree)
                     xsdFlatContent = flatStr
-                    xsdAPIContent = etree.tostring(xmlTree)
+                    xsdAPIContent = etree.tostring (xmlTree).decode('utf-8')
                 except Exception as e:
                     content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)

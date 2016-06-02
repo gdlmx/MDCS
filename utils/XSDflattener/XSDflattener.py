@@ -51,7 +51,7 @@ class XSDFlattener(object):
 					for element in dependencyElements:
 						xmlTree.getroot().append(element)
 				el_include.getparent().remove(el_include)
-		return etree.tostring(xmlTree)
+		return etree.tostring (xmlTree).decode('utf-8')
 		
 	def get_flat_dependency(self, uri):
 		try:
@@ -71,7 +71,7 @@ class XSDFlattener(object):
 							for element in dependencyElements:
 								xmlTree.getroot().append(element)
 						el_include.getparent().remove(el_include)
-				return etree.tostring(xmlTree)
+				return etree.tostring (xmlTree).decode('utf-8')
 			else:
 				return None
 		except:

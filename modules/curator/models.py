@@ -205,7 +205,7 @@ class RawXMLModule(TextAreaModule):
             data = request.GET['data']
             xml_data = etree.fromstring(data)
             for xml_data_element in xml_data:
-                xml_string += etree.tostring(xml_data_element)
+                xml_string += etree.tostring (xml_data_element).decode('utf-8')
         
         if xml_string != '':
             self.data = xml_string
