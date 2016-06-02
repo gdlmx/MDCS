@@ -37,7 +37,7 @@ def get_hash(xmlString):
 	cleanOrderedXmlString = str(sort_dict(xmlDict))
 	
 	# compute the hash
-	hash = hashlib.sha1(cleanOrderedXmlString)
+	hash = hashlib.sha1(cleanOrderedXmlString.encode('utf-8'))
 	
 	return hash.hexdigest()
 	
