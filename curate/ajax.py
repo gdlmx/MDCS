@@ -2203,8 +2203,8 @@ def generate_xsd_form(request):
         xmlDocTree = request.session['xmlDocTree']   
     
     # find the namespaces
-    request.session['namespaces'] = common.get_namespaces(BytesIO(str(xmlDocTree)))
-    for prefix, url in request.session['namespaces'].items():
+    request.session['namespaces'] = common.get_namespaces(BytesIO(str(xmlDocTree).encode('utf-8')))
+    for prefix, url in list(request.session['namespaces'].items()):
         if (url == "{http://www.w3.org/2001/XMLSchema}"):            
             request.session['defaultPrefix'] = prefix
             break

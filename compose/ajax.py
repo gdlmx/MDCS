@@ -184,8 +184,8 @@ def load_xml(request):
     transform = etree.XSLT(xslt)
     xmlTree = ""
     if (xmlString != ""):
-        request.session['namespacesCompose'] = common.get_namespaces(BytesIO(str(xmlString)))
-        for prefix, url in request.session['namespacesCompose'].items():
+        request.session['namespacesCompose'] = common.get_namespaces(BytesIO(str(xmlString).encode('utf-8')))
+        for prefix, url in list(request.session['namespacesCompose'].items()):
             if (url == "{http://www.w3.org/2001/XMLSchema}"):            
                 request.session['defaultPrefixCompose'] = prefix
                 break

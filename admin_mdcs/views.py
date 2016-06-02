@@ -507,8 +507,8 @@ def modules(request):
             request.session['moduleTemplateID'] = id
             request.session['moduleTemplateContent'] = object.content
 
-            request.session['moduleNamespaces'] = common.get_namespaces(BytesIO(str(object.content)))
-            for prefix, url in request.session['moduleNamespaces'].items():
+            request.session['moduleNamespaces'] = common.get_namespaces(BytesIO(object.content.encode('utf-8')))
+            for prefix, url in list(request.session['moduleNamespaces'].items()):
                 if (url == "{http://www.w3.org/2001/XMLSchema}"):
                     request.session['moduleDefaultPrefix'] = prefix
                     break
