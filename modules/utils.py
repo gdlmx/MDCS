@@ -24,8 +24,8 @@ def sanitize(input_value):
             input_value = etree.tostring(xml_data)
         except XMLSyntaxError, e:
             pass
-#             if e is not None and e.message is not None:
-#                 print 'Sanitizing XML (' + input_value + '): ' + e.message
+#             if e is not None and str(e) is not None:
+#                 print 'Sanitizing XML (' + input_value + '): ' + str(e)
 #             else:
 #                 print 'Sanitizing XML (' + input_value + '): '
         finally:

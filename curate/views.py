@@ -200,7 +200,7 @@ def curate_enter_data(request):
     except MDCSError, e:
         template = loader.get_template('curate/errors.html')
         context = RequestContext(request, {
-            'errors': e.message,
+            'errors': str(e),
         })
         return HttpResponse(template.render(context))
 
@@ -394,7 +394,7 @@ def start_curate(request):
             except MDCSError, e:
                 template = loader.get_template('curate/errors.html')
                 context = RequestContext(request, {
-                    'errors': e.message,
+                    'errors': str(e),
                 })
                 return HttpResponse(template.render(context))
 
@@ -453,8 +453,8 @@ def save_xml_data_to_db(request):
                 except Exception, e:
                     return HttpResponseBadRequest('Unable to save data.')
                 return HttpResponse('ok')
-            except Exception, e:
-                message = e.message.replace('"', '\'')
+            except Exception as e:
+                message = str(e).replace('"', '\'')
                 return HttpResponseBadRequest(message)
         else:
             return HttpResponseBadRequest('No data to save.')

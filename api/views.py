@@ -189,8 +189,8 @@ def add_savedquery(request):
         try:
             SavedQuery(user=request.DATA["user"],template=request.DATA["template"],query=request.DATA["query"],displayedQuery=request.DATA["displayedQuery"]).save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception, e:
-            content = {'message':e.message}
+        except Exception as e:
+            content = {'message':str(e)}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -560,8 +560,8 @@ def curate(request):
                 #xmlParseEntityRef exception: use of & < > forbidden
                 content= {'message': "Validation Failed. May be caused by : Syntax problem, use of forbidden symbols like '&' or '<' or '>'"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
-            except Exception, e:
-                content = {'message':e.message}
+            except Exception as e:
+                content = {'message':str(e)}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
             jsondata = XMLdata(schemaID = request.DATA['schema'], xml = xmlStr, title = request.DATA['title'])
             docID = jsondata.save()            
@@ -601,8 +601,8 @@ def add_schema(request):
         # is this a valid XMl document?
         try:
             xmlTree = etree.parse(BytesIO(xsdContent.encode('utf-8')))
-        except Exception, e:
-            content = {'message':'This is not a valid XML document.' + e.message.replace("'","")}
+        except Exception as e:
+            content = {'message':'This is not a valid XML document.' + str(e).replace("'","")}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         # check that the schema is valid for the MDCS
         errors = common.getValidityErrorsForMDCS(xmlTree, "Template")
@@ -638,8 +638,8 @@ def add_schema(request):
                     xmlSchema = etree.XMLSchema(flatTree)
                     xsdFlatContent = flatStr
                     xsdAPIContent = etree.tostring(xmlTree)
-                except Exception, e:
-                    content = {'message':'This is not a valid XML schema.' + e.message.replace("'","")}
+                except Exception as e:
+                    content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
             else:
                 content = {'message':'The number of given dependencies (' + str(len(dependencies)) + ')  is different from the actual number of dependencies found in the uploaded template (' + str(len(includes)) + ').'}
@@ -652,8 +652,8 @@ def add_schema(request):
                 # is this a valid XML schema?
                 try:
                     xmlSchema = etree.XMLSchema(xmlTree)
-                except Exception, e:
-                    content = {'message':'This is not a valid XML schema.' + e.message.replace("'","")}
+                except Exception as e:
+                    content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         # a template version is provided: if it exists, add the schema as a new version and manage the version numbers
@@ -1055,8 +1055,8 @@ def add_type(request):
         # is this a valid XMl document?
         try:
             xmlTree = etree.parse(BytesIO(xsdContent.encode('utf-8')))
-        except Exception, e:
-            content = {'message':'This is not a valid XML document.' + e.message.replace("'","")}
+        except Exception as e:
+            content = {'message':'This is not a valid XML document.' + str(e).replace("'","")}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         # check that the schema is valid for the MDCS
@@ -1093,8 +1093,8 @@ def add_type(request):
                     xmlSchema = etree.XMLSchema(flatTree)
                     xsdFlatContent = flatStr
                     xsdAPIContent = etree.tostring(xmlTree)
-                except Exception, e:
-                    content = {'message':'This is not a valid XML schema.' + e.message.replace("'","")}
+                except Exception as e:
+                    content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
             else:
                 content = {'message':'The number of given dependencies (' + str(len(dependencies)) + ')  is different from the actual number of dependencies found in the uploaded template (' + str(len(includes)) + ').'}
@@ -1107,8 +1107,8 @@ def add_type(request):
                 # is this a valid XML schema?
                 try:
                     xmlSchema = etree.XMLSchema(xmlTree)
-                except Exception, e:
-                    content = {'message':'This is not a valid XML schema.' + e.message.replace("'","")}
+                except Exception as e:
+                    content = {'message':'This is not a valid XML schema.' + str(e).replace("'","")}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -1794,8 +1794,8 @@ def add_user(request):
             user.email = email
             user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception, e:
-            content = {'message':e.message}
+        except Exception as e:
+            content = {'message':str(e)}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -1872,8 +1872,8 @@ def update_user(request):
                 user.email = request.DATA['email']
             user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception, e:
-            content = {'message':e.message}
+        except Exception as e:
+            content = {'message':str(e)}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -2112,8 +2112,8 @@ def add_xslt(request):
         try:
             try:
                 etree.XML(xmlStr.encode('utf-8'))
-            except Exception, e:
-                content = {'message':e.message}
+            except Exception as e:
+                content = {'message':str(e)}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
             try:

@@ -50,8 +50,8 @@ class Module(object):
             template_data['module'] = self._get_module(request)
             template_data['display'] = self._get_display(request)
             template_data['result'] = sanitize(self._get_result(request))
-        except Exception, e:
-            raise ModuleError('Something went wrong during module initialization: ' + e.message)
+        except Exception as e:
+            raise ModuleError('Something went wrong during module initialization: ' + str(e))
 
         # TODO Add additional checks
         for key, val in template_data.items():
@@ -72,8 +72,8 @@ class Module(object):
         try:
             template_data['display'] = self._post_display(request)
             template_data['result'] = sanitize(self._post_result(request))
-        except Exception, e:
-            raise ModuleError('Something went wrong during module update: ' + e.message)
+        except Exception as e:
+            raise ModuleError('Something went wrong during module update: ' + str(e))
 
         html_code = render_module(self.template, template_data)
         

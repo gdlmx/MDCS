@@ -297,8 +297,8 @@ def save_template(request):
     # is it a valid XML document ?
     try:            
         xmlTree = etree.parse(BytesIO(content.encode('utf-8')))
-    except Exception, e:
-        response_dict['errors'] = e.message.replace("'","")
+    except Exception as e:
+        response_dict['errors'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     flattener = XSDFlattenerMDCS(etree.tostring(xmlTree))
@@ -308,8 +308,8 @@ def save_template(request):
     try:
         # is it a valid XML schema ?
         xmlSchema = etree.XMLSchema(flatTree)
-    except Exception, e:
-        response_dict['errors'] = e.message.replace("'","")
+    except Exception as e:
+        response_dict['errors'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     hash = XSDhash.get_hash(content) 
@@ -364,7 +364,7 @@ def save_type(request):
         content = etree.tostring(xmlTree)
     except Exception, e:
         response_dict['errors'] = "Not a valid XML document."
-        response_dict['message'] = e.message.replace("'","")
+        response_dict['message'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     flattener = XSDFlattenerMDCS(content)
@@ -376,7 +376,7 @@ def save_type(request):
         xmlSchema = etree.XMLSchema(flatTree)
     except Exception, e:
         response_dict['errors'] = "Not a valid XML document."
-        response_dict['message'] = e.message.replace("'","")
+        response_dict['message'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     

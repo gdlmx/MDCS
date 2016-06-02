@@ -59,7 +59,7 @@ def upload_object(request):
         xmlTree = etree.parse(BytesIO(object_content.encode('utf-8')))
     except Exception, e:
         response_dict['errors'] = "Not a valid XML document."
-        response_dict['message'] = e.message.replace("'","")
+        response_dict['message'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     # is it supported by the MDCS ?
@@ -87,7 +87,7 @@ def upload_object(request):
             xmlSchema = etree.XMLSchema(xmlTree)
         except Exception, e:
             response_dict['errors'] = "Not a valid XML schema."
-            response_dict['message'] = e.message.replace("'","")
+            response_dict['message'] = str(e).replace("'","")
             return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
         
         request.session['uploadObjectValid'] = True
@@ -242,8 +242,8 @@ def resolve_dependencies(request):
         request.session["uploadDependencies"] = dependencies
         message = "The uploaded template is valid. You can now save it." + saveBtn
         response_dict = {'message': message}
-    except Exception, e:
-        response_dict = {'errorDependencies': e.message.replace("'", "")}
+    except Exception as e:
+        response_dict = {'errorDependencies': str(e).replace("'", "")}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')      
 
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -448,7 +448,7 @@ def upload_version(request):
             xmlTree = etree.parse(BytesIO(versionContent.encode('utf-8')))
         except Exception, e:
             response_dict['errors'] = "Not a valid XML document."
-            response_dict['message'] = e.message.replace("'","")
+            response_dict['message'] = str(e).replace("'","")
             return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
         
         # is it supported by the MDCS ?
@@ -476,7 +476,7 @@ def upload_version(request):
                 xmlSchema = etree.XMLSchema(xmlTree)
             except Exception, e:
                 response_dict['errors'] = "Not a valid XML schema."
-                response_dict['message'] = e.message.replace("'","")
+                response_dict['message'] = str(e).replace("'","")
                 return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
             
             request.session['uploadVersionValid'] = True

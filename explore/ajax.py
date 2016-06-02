@@ -686,8 +686,8 @@ def generateForm(request):
             formString += generateElement(request, elements[0], "", xmlDocTree)    
         elif len(elements) > 1:
             formString += generateChoice(request, elements, "", xmlDocTree)
-    except Exception, e:
-        formString = "UNSUPPORTED ELEMENT FOUND (" + e.message + ")" 
+    except Exception as e:
+        formString = "UNSUPPORTED ELEMENT FOUND (" + str(e) + ")" 
         
     print 'END def generateForm(request)'
 

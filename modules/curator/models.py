@@ -221,8 +221,8 @@ class RawXMLModule(TextAreaModule):
         try:
             self.parse_data(data)
             return '<span class="success">XML entered is well-formed</span>'
-        except XMLSyntaxError, e:
-            return '<span class="error">XML error: ' + e.message + '</span>'
+        except XMLSyntaxError as e:
+            return '<span class="error">XML error: ' + str(e) + '</span>'
 
     def parse_data(self, data):
         unescaped_data = self.parser.unescape(data)

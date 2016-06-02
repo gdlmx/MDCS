@@ -110,8 +110,8 @@ def validate_xml_data(request):
         message= "Validation Failed. </br> May be caused by : </br> - Syntax problem </br> - Use of forbidden symbols : '&' or '<' or '>'"
         response_dict = {'errors': message}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
-    except Exception, e:
-        message= e.message.replace('"', '\'')
+    except Exception as e:
+        message= str(e).replace('"', '\'')
         response_dict = {'errors': message}
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
@@ -2131,8 +2131,8 @@ def generateForm(request):
             formString += "<div xmlID='root' name='xsdForm'>"
             formString += generateChoice(request, elements, xmlDocTree, namespace, edit_data_tree=edit_data_tree)
             formString += "</div>"
-    except Exception, e:
-        formString = "UNSUPPORTED ELEMENT FOUND (" + e.message + ")" 
+    except Exception as e:
+        formString = "UNSUPPORTED ELEMENT FOUND (" + str(e) + ")" 
 
     # save the list of elements for the form
     form_data.elements = request.session['mapTagID']
