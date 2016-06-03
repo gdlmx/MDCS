@@ -45,7 +45,7 @@ def get_hash(xmlString):
 # inspired by: http://stackoverflow.com/questions/5884066/hashing-a-python-dictionary
 def sort_dict(o):
 	if isinstance(o, (set, tuple, list)):
-		return tuple([sort_dict(e) for e in sorted(o)]) 
+		return tuple(sort_dict(e) for e in o) # o may contains dict which is un-sortable
 	elif not isinstance(o, dict):
 		return o
 
