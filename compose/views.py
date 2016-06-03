@@ -54,7 +54,7 @@ def index(request):
        'templates':currentTemplates,
        'userTemplates': Template.objects(user=str(request.user.id)),
     })
-
+    context['targetnames']=['type', 'template']
     return HttpResponse(template.render(context))
 
 

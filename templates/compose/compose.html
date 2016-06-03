@@ -120,6 +120,24 @@ on "Compose Template" to proceed.  It will automatically load the appropriate te
 </div>
     {% endif %}
 {% endif %}
+<div>
+{% for target in targetnames %}
+    <button  class="btn btn-primary btn-lg" data-toggle="modal" data-target="#diaglog-upload-{{target}}"><i class="icon-upload"></i>Upload {{target}}</button>
+    <div class="modal fade" id="diaglog-upload-{{target}}" tabindex="-1" role="dialog" aria-labelledby="diaglog-upload-{{target}}-label" aria-hidden="true"><div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"> 
+          <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true">&times;</span> <span class="sr-only">Close</span> </button> 
+          <h4 class="modal-title" id="diaglog-upload-{{target}}-label">Create new {{target}} from XSD file</h4>
+        </div>
+        <div class="modal-body">
+            <form action="/compose/save_{{target}}" method="POST" onsubmit="return ajaxSubmit(this)">{% csrf_token %}
+              {{target}} name: <input type="text" name="{{target}}Name"></input><br/>
+              XSD content: <textarea cols="120" name="newXmlTemplateCompose"></textarea><br/>
+              <input class="btn" type="submit" value="Submit"></input>
+            </form>
+        </div>
+    </div></div></div>
+{% endfor %}
+</div>
 {% endif %}
 </div>
 {% endblock %}

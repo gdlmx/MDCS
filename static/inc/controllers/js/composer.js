@@ -991,3 +991,33 @@ manageXPath = function(){
 	  }	  
 	})
 }
+
+/**
+ * Submit a form using AJAX call 
+ */
+ajaxSubmit=function(self){
+    $.post( $(self).attr( 'action' ), $(self).serialize() , 
+    	function(data, textStatus){  alertAjaxResponse($(self).parent(), data , 'Success '+textStatus)  }
+	).fail(function(xhr,textStatus){ alertAjaxResponse($(self).parent(), xhr.responseText , 'Fail '+textStatus) });
+	return false;
+}
+
+/**
+ * Print JSON response from AJAX call using bootstrap alert style
+ */
+alertAjaxResponse=function(ctn, data, status){
+	message = $('<span>').append($('<h4>').text(status)) ;
+	try{
+		data_obj = $.parseJSON(data);
+		if(!data_obj) throw 1;
+		$.each(data_obj, function(k,v){
+			message.append($('<p>').text(k + ': '+v))
+		});
+	}catch(err){
+		message.append(data);
+	}
+	$(ctn).children('div.alert').remove();
+	$(ctn).append(
+		$('<div class="alert"><a class="close" data-dismiss="alert">×</a></div>').append(message)
+	)
+}

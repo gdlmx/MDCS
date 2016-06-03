@@ -290,8 +290,11 @@ def rename_element(request):
 # 
 ################################################################################
 def save_template(request):
-    template_name = request.POST['templateName']    
-    content=request.session['newXmlTemplateCompose']
+    template_name = request.POST['templateName']
+    try:
+        content=request.POST['newXmlTemplateCompose']
+    except KeyError:
+        content=request.session['newXmlTemplateCompose']
     
     response_dict = {}
     # is it a valid XML document ?
@@ -345,10 +348,12 @@ def save_template(request):
 def save_type(request):     
     type_name = request.POST['typeName']
     response_dict = {}
-       
-    content=request.session['newXmlTemplateCompose']
-    
-    templateID = request.session['currentComposeTemplateID']
+    try:
+        content = request.POST['newXmlTemplateCompose']
+        templateID = "new"
+    except KeyError:
+        content = request.session['newXmlTemplateCompose']
+        templateID = request.session['currentComposeTemplateID']
     # can save as type if new type or from existing type
     if templateID != "new":
         if templateID not in Type.objects.all().values_list('id'):
