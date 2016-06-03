@@ -129,7 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mongoengine.django.mongo_auth',
+#    'mongoengine.django.mongo_auth',
     'rest_framework',
     'rest_framework_swagger',
     'oauth2_provider',

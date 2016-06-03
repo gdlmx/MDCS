@@ -14,7 +14,11 @@
 #
 ################################################################################
 
+# from django_mongoengine import Document, EmbeddedDocument
+# from django_mongoengine.fields import *
 from mongoengine import *
+from django_mongoengine import fields, Document as djDocument
+
 
 # Specific to MongoDB ordered inserts
 from collections import OrderedDict
@@ -180,14 +184,14 @@ class FormElement(Document):
     xml_element = ReferenceField(XMLElement)
 
 
-class FormData(Document):
+class FormData(djDocument):
     """Stores data being entered and not yet curated"""
-    user = StringField(required=True)
-    template = StringField(required=True)
-    name = StringField(required=True)
-    elements = DictField()
-    xml_data = StringField()
-    xml_data_id = StringField()
+    user = fields.StringField(required=True)
+    template = fields.StringField(required=True)
+    name = fields.StringField(required=True)
+    elements = fields.DictField(blank=True)
+    xml_data = fields.StringField(blank=True)
+    xml_data_id = fields.StringField(blank=True)
 
 
 def postprocessor(path, key, value):
