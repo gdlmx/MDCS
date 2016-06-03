@@ -14,8 +14,8 @@ def sanitize(input_value):
 
         return clean_value
     elif input_type == dict:
-        return {sanitize(key): sanitize(val) for key, val in input_value.items()}
-    elif input_type == str or input_type == unicode:
+        return {sanitize(key): sanitize(val) for key, val in list(input_value.items())}
+    elif input_type == str or input_type == str:
         try:
             # XML cleaning
             xml_cleaner_parser = etree.XMLParser(remove_blank_text=True)

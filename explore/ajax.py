@@ -114,13 +114,13 @@ class BranchInfo:
 #
 ################################################################################
 def set_current_template(request):
-    print 'BEGIN def setCurrentTemplate(request)'    
+    print('BEGIN def setCurrentTemplate(request)')    
 
     template_id = request.POST['templateID']
 
     setCurrentTemplate(request, template_id)
 
-    print 'END def setCurrentTemplate(request)'
+    print('END def setCurrentTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -137,7 +137,7 @@ def set_current_template(request):
 #
 ################################################################################
 def setCurrentTemplate(request, template_id):
-    print 'BEGIN def setCurrentTemplate(request)'    
+    print('BEGIN def setCurrentTemplate(request)')    
 
     # reset global variables
     request.session['formStringExplore'] = ""
@@ -156,7 +156,7 @@ def setCurrentTemplate(request, template_id):
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     request.session['xmlDocTreeExplore'] = etree.tostring (XMLtree).decode('utf-8')
 
-    print 'END def setCurrentTemplate(request)'
+    print('END def setCurrentTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 ################################################################################
@@ -170,7 +170,7 @@ def setCurrentTemplate(request, template_id):
 #
 ################################################################################
 def set_current_user_template(request):
-    print 'BEGIN def setCurrentTemplate(request)'    
+    print('BEGIN def setCurrentTemplate(request)')    
 
     template_id = request.POST['templateID']
     
@@ -193,7 +193,7 @@ def set_current_user_template(request):
     XMLtree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     request.session['xmlDocTreeExplore'] = etree.tostring (XMLtree).decode('utf-8')
 
-    print 'END def setCurrentTemplate(request)'
+    print('END def setCurrentTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -207,13 +207,13 @@ def set_current_user_template(request):
 # 
 ################################################################################
 def verify_template_is_selected(request):
-    print 'BEGIN def verifyTemplateIsSelected(request)'
+    print('BEGIN def verifyTemplateIsSelected(request)')
     if 'exploreCurrentTemplateID' in request.session:
         templateSelected = 'yes'
     else:
         templateSelected = 'no'
 
-    print 'END def verifyTemplateIsSelected(request)'
+    print('END def verifyTemplateIsSelected(request)')
     
     response_dict = {'templateSelected': templateSelected}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
@@ -416,7 +416,7 @@ def generateRestriction(request, element, fullPath, elementName, xmlTree):
     defaultNamespace = request.session['defaultNamespaceExplore']  
     mapTagIDElementInfo = request.session['mapTagIDElementInfoExplore']
     
-    elementID = len(mapTagIDElementInfo.keys()) 
+    elementID = len(list(mapTagIDElementInfo.keys())) 
     
     formString = ""
     
@@ -458,7 +458,7 @@ def generateRestriction(request, element, fullPath, elementName, xmlTree):
 def generateExtension(request, element, fullPath, elementName):
     mapTagIDElementInfo = request.session['mapTagIDElementInfoExplore']
     
-    elementID = len(mapTagIDElementInfo.keys()) 
+    elementID = len(list(mapTagIDElementInfo.keys())) 
     
     formString = ""
     
@@ -625,7 +625,7 @@ def generateElement(request, element, fullPath, xmlTree, choiceInfo=None):
     # if element is one of the declared type
     elif element.attrib.get('type') in common.getXSDTypes(defaultPrefix):                                                                   
         mapTagIDElementInfo = request.session['mapTagIDElementInfoExplore']                  
-        elementID = len(mapTagIDElementInfo.keys())
+        elementID = len(list(mapTagIDElementInfo.keys()))
         formString += "<li id='" + str(elementID) + "'>" + textCapitalized + " <input type='checkbox'>"                         
         formString += "</li>"                    
         elementInfo = ElementInfo(element.attrib.get('type'),fullPath[1:] + "." + textCapitalized)
@@ -662,7 +662,7 @@ def generateElement(request, element, fullPath, xmlTree, choiceInfo=None):
 #
 ################################################################################
 def generateForm(request):
-    print 'BEGIN def generateForm(request)'    
+    print('BEGIN def generateForm(request)')    
     
 
     xmlDocTreeStr = request.session['xmlDocTreeExplore']
@@ -689,7 +689,7 @@ def generateForm(request):
     except Exception as e:
         formString = "UNSUPPORTED ELEMENT FOUND (" + str(e) + ")" 
         
-    print 'END def generateForm(request)'
+    print('END def generateForm(request)')
 
     return formString
 
@@ -703,7 +703,7 @@ def generateForm(request):
 #
 ################################################################################
 def generate_xsd_tree_for_querying_data(request): 
-    print 'BEGIN def generateXSDTreeForQueryingData(request)'
+    print('BEGIN def generateXSDTreeForQueryingData(request)')
     
     if 'formStringExplore' in request.session:
         formString = request.session['formStringExplore']  
@@ -720,7 +720,7 @@ def generate_xsd_tree_for_querying_data(request):
     # get the namespaces of the schema and the default prefix
     xmlDocTree = etree.fromstring(xmlDocTreeStr)
     defaultNamespace = "http://www.w3.org/2001/XMLSchema"
-    for prefix, url in xmlDocTree.nsmap.iteritems():
+    for prefix, url in xmlDocTree.nsmap.items():
         if (url == defaultNamespace):            
             request.session['defaultPrefixExplore'] = prefix
             break
@@ -734,7 +734,7 @@ def generate_xsd_tree_for_querying_data(request):
         formString += generateForm(request)        
         formString += "</form>"        
  
-    print 'END def generateXSDTreeForQueryingData(request)'
+    print('END def generateXSDTreeForQueryingData(request)')
     response_dict = {'xsdForm': formString}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
@@ -749,7 +749,7 @@ def generate_xsd_tree_for_querying_data(request):
 #
 ################################################################################
 def execute_query(request):
-    print 'BEGIN def executeQuery(request)'        
+    print('BEGIN def executeQuery(request)')        
     
     query_form = request.POST['queryForm']
     fed_of_queries = request.POST['fedOfQueries']
@@ -777,7 +777,7 @@ def execute_query(request):
             errorsString += "<p>" + error + "</p>"    
         response_dict = {'listErrors': errorsString}        
 
-    print 'END def executeQuery(request, queryForm, queryBuilder, fedOfQueries)'
+    print('END def executeQuery(request, queryForm, queryBuilder, fedOfQueries)')
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
 ################################################################################
@@ -833,11 +833,11 @@ def get_results(request):
 #
 ################################################################################
 def manageRegexBeforeExe(query):
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 manageRegexBeforeExe(subValue)
-        elif isinstance(value, unicode):
+        elif isinstance(value, str):
             if (len(value) >= 2 and value[0] == "/" and value[-1] == "/"):
                 query[key] = re.compile(value[1:-1])
         elif isinstance(value, dict):
@@ -931,7 +931,7 @@ def manageRegexBeforeExe(query):
 #
 ################################################################################
 def get_results_by_instance_keyword(request):
-    print 'BEGIN def getResultsKeyword(request)'
+    print('BEGIN def getResultsKeyword(request)')
     resultsByKeyword = []
     results = []
     resultString = ""
@@ -997,7 +997,7 @@ def get_results_by_instance_keyword(request):
                         custom_xslt = True
                     else:
                         newdom = transform(dom)
-                except Exception, e:
+                except Exception as e:
                     #We use the default one
                     newdom = transform(dom)
                     custom_xslt = False
@@ -1028,7 +1028,7 @@ def get_results_by_instance_keyword(request):
         result_json['resultString'] = resultString
 
     request.session[sessionName] = results
-    print 'END def getResultsKeyword(request)'
+    print('END def getResultsKeyword(request)')
 
     return HttpResponse(json.dumps({'resultsByKeyword' : resultsByKeyword, 'resultString' : resultString, 'count' : len(instanceResults)}), content_type='application/javascript')
 
@@ -1044,7 +1044,7 @@ def get_results_by_instance_keyword(request):
 #
 ################################################################################
 def get_results_by_instance(request):
-    print 'BEGIN def getResults(request)'
+    print('BEGIN def getResults(request)')
     num_instance = request.GET['numInstance']
     instances = request.session['instancesExplore']
     resultString = ""
@@ -1097,7 +1097,7 @@ def get_results_by_instance(request):
                             custom_xslt = True
                         else:
                             newdom = transform(dom)
-                    except Exception, e:
+                    except Exception as e:
                         #We use the default one
                         newdom = transform(dom)
                         custom_xslt = False
@@ -1141,7 +1141,7 @@ def get_results_by_instance(request):
                             custom_xslt = True
                         else:
                             newdom = transform(dom)
-                    except Exception, e:
+                    except Exception as e:
                         #We use the default one
                         newdom = transform(dom)
                         custom_xslt = False
@@ -1158,7 +1158,7 @@ def get_results_by_instance(request):
             
         request.session[sessionName] = results
     
-    print 'END def getResults(request)'
+    print('END def getResults(request)')
     response_dict = {'results': resultString}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
  
@@ -1175,7 +1175,7 @@ def get_results_by_instance(request):
 #
 ################################################################################
 def manageRegexBeforeAPI(query, queryStr):
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 queryStr = manageRegexBeforeAPI(subValue, queryStr)
@@ -1199,7 +1199,7 @@ def manageRegexBeforeAPI(query, queryStr):
 #
 ################################################################################
 def intCriteria(path, comparison, value, isNot=False):
-    print 'BEGIN def intCriteria(path, comparison, value, isNot=False)'
+    print('BEGIN def intCriteria(path, comparison, value, isNot=False)')
     criteria = dict()
 
     if(comparison == "="):
@@ -1213,7 +1213,7 @@ def intCriteria(path, comparison, value, isNot=False):
         else:
             criteria[path] = eval('{"$'+comparison+'":'+ value +'}')
 
-    print 'END def intCriteria(path, comparison, value, isNot=False)'
+    print('END def intCriteria(path, comparison, value, isNot=False)')
     return criteria
 
 
@@ -1300,15 +1300,15 @@ def queryToCriteria(query, isNot=False):
 #
 ################################################################################
 def invertQuery(query):
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 invertQuery(subValue)
         else:            
             #lt, lte, =, gte, gt, not, ne
             if isinstance(value,dict):                
-                if value.keys()[0] == "$not" or value.keys()[0] == "$ne":
-                    query[key] = (value[value.keys()[0]])                    
+                if list(value.keys())[0] == "$not" or list(value.keys())[0] == "$ne":
+                    query[key] = (value[list(value.keys())[0]])                    
                 else:
                     savedValue = value
                     query[key] = dict()
@@ -1496,7 +1496,7 @@ def checkQueryForm(request, htmlTree):
         xmlDocTree = etree.fromstring(xmlDocTreeStr)
         
         defaultNamespace = "http://www.w3.org/2001/XMLSchema"
-        for prefix, url in xmlDocTree.nsmap.iteritems():
+        for prefix, url in xmlDocTree.nsmap.items():
             if (url == defaultNamespace):            
                 request.session['defaultPrefixExplore'] = prefix
                 defaultPrefix = prefix
@@ -1554,7 +1554,7 @@ def checkQueryForm(request, htmlTree):
                 if (comparison == "like"):
                     try:
                         re.compile(value)
-                    except Exception, e:
+                    except Exception as e:
                         errors.append(element + " must be a valid regular expression ! (" + str(e) + ")")
                     
     return errors
@@ -1995,7 +1995,7 @@ def manageRegexBeforeSave(query):
 #         else:
 #             if isinstance(value, re._pattern_type):
 #                 query[key] = "re.compile(" + value.pattern + ")"
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 manageRegexBeforeSave(subValue)
@@ -2240,7 +2240,7 @@ def clear_queries(request):
     
     mapQueryInfo = request.session['mapQueryInfoExplore']
        
-    for queryID in mapQueryInfo.keys():
+    for queryID in list(mapQueryInfo.keys()):
         SavedQuery(id=queryID).delete()
             
     request.session['mapQueryInfoExplore'] = dict()
@@ -2258,7 +2258,7 @@ def clear_queries(request):
 #
 ################################################################################ 
 def manageRegexFromDB(query):
-    for key, value in query.iteritems():
+    for key, value in query.items():
         if key == "$and" or key == "$or":
             for subValue in value:
                 manageRegexFromDB(subValue)
@@ -2332,7 +2332,7 @@ def get_custom_form(request):
 #
 ################################################################################
 def save_custom_data(request):
-    print '>>>>  BEGIN def saveCustomData(request)'
+    print('>>>>  BEGIN def saveCustomData(request)')
     
     form_content = request.POST['formContent']
     request.session['formStringExplore']  = form_content
@@ -2348,7 +2348,7 @@ def save_custom_data(request):
     
     request.session['anyCheckedExplore'] = False 
 
-    print '>>>> END def saveCustomData(request)'
+    print('>>>> END def saveCustomData(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 ################################################################################
@@ -2521,7 +2521,7 @@ def select_element(request):
 #                
 ################################################################################
 def prepare_sub_element_query(request):
-    print '>>>>  BEGIN def prepareSubElementQuery(request)'
+    print('>>>>  BEGIN def prepareSubElementQuery(request)')
 
     leaves_id = request.GET['leavesID']    
     mapTagIDElementInfo =  request.session['mapTagIDElementInfoExplore']
@@ -2567,7 +2567,7 @@ def prepare_sub_element_query(request):
         subElementQueryBuilderStr += "</li><br/>"
     subElementQueryBuilderStr += "</ul>"
     
-    print '>>>>  END def prepareSubElementQuery(request)'
+    print('>>>>  END def prepareSubElementQuery(request)')
     response_dict = {'subElementQueryBuilder': subElementQueryBuilderStr}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
@@ -2582,7 +2582,7 @@ def prepare_sub_element_query(request):
 #                
 ################################################################################
 def insert_sub_element_query(request):
-    print '>>>>  BEGIN def insertSubElementQuery(request)'
+    print('>>>>  BEGIN def insertSubElementQuery(request)')
     
     form = request.POST['form']
     leaves_id = request.POST['leavesID']
@@ -2632,7 +2632,7 @@ def insert_sub_element_query(request):
         response_dict = {'listErrors': errorsString}            
             
     
-    print '>>>>  END def insertSubElementQuery(request)'
+    print('>>>>  END def insertSubElementQuery(request)')
     
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
@@ -2686,7 +2686,7 @@ def checkSubElementField(request, liElement, elementName, elementType):
         if (comparison == "like"):
             try:
                 re.compile(value)
-            except Exception, e:
+            except Exception as e:
                 error = elementName + " must be a valid regular expression ! (" + str(e) + ")"    
 
     return error

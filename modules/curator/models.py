@@ -1,4 +1,4 @@
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 from modules.builtin.models import PopupModule, TextAreaModule, InputModule
 from modules.exceptions import ModuleError
 from modules.curator.forms import BLOBHosterForm, URLForm
@@ -119,7 +119,7 @@ class RemoteBlobHosterModule(InputModule):
                 template = Template(display)
                 context = Context({'handle': url})
             return template.render(context)
-        except ValidationError, e:
+        except ValidationError as e:
             return '<b style="color:red;">' + '<br/>'.join(e.messages) + '</b>'
 
 

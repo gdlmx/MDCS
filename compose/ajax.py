@@ -25,7 +25,7 @@ from io import BytesIO
 from utils.XSDhash import XSDhash
 from utils.XSDflattenerMDCS.XSDflattenerMDCS import XSDFlattenerMDCS
 from utils.APIschemaLocator.APIschemaLocator import getSchemaLocation
-from urlparse import urlparse
+from urllib.parse import urlparse
 from mgi import common
 
 # XSL file loading
@@ -42,7 +42,7 @@ import os
 #
 ################################################################################
 def set_current_template(request):
-    print 'BEGIN def setCurrentTemplate(request)'
+    print('BEGIN def setCurrentTemplate(request)')
 
     template_id = request.POST['templateID']
 
@@ -66,7 +66,7 @@ def set_current_template(request):
         request.session['xmlTemplateCompose'] = base_template_content
         request.session['newXmlTemplateCompose'] = base_template_content
 
-    print 'END def setCurrentTemplate(request)'
+    print('END def setCurrentTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -81,7 +81,7 @@ def set_current_template(request):
 #
 ################################################################################
 def set_current_user_template(request):
-    print 'BEGIN def setCurrentUserTemplate(request)'    
+    print('BEGIN def setCurrentUserTemplate(request)')    
 
     template_id = request.POST['templateID']
     
@@ -98,7 +98,7 @@ def set_current_user_template(request):
     request.session['xmlTemplateCompose'] = xmlDocData
     request.session['newXmlTemplateCompose'] = xmlDocData
 
-    print 'END def setCurrentUserTemplate(request)'
+    print('END def setCurrentUserTemplate(request)')
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
 
@@ -112,12 +112,12 @@ def set_current_user_template(request):
 # 
 ################################################################################
 def verify_template_is_selected(request):
-    print 'BEGIN def verifyTemplateIsSelected(request)'
+    print('BEGIN def verifyTemplateIsSelected(request)')
     if 'currentComposeTemplateID' in request.session:
-        print 'template is selected'
+        print('template is selected')
         templateSelected = 'yes'
     else:
-        print 'template is not selected'
+        print('template is not selected')
         templateSelected = 'no'
 
     response_dict = {'templateSelected': templateSelected}
@@ -379,7 +379,7 @@ def save_type(request):
     try:
         # is it a valid XML schema ?
         xmlSchema = etree.XMLSchema(flatTree)
-    except Exception, e:
+    except Exception as e:
         response_dict['errors'] = "Not a valid XML document."
         response_dict['message'] = str(e).replace("'","")
         return HttpResponse(json.dumps(response_dict), content_type='application/javascript')

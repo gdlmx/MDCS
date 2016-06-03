@@ -229,8 +229,8 @@ class ExcelUploaderModule(PopupModule):
     
                     self.table['values'].append(value_list)
     
-                print self.table_name
-                print self.table
+                print(self.table_name)
+                print(self.table)
 
         return PopupModule.get_module(self, request)
 
