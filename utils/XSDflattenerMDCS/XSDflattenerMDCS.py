@@ -21,7 +21,7 @@
 
 from utils.XSDflattener.XSDflattener import XSDFlattener
 from mgi.models import Type, MetaSchema
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 ################################################################################
 #

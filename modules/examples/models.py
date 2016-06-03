@@ -72,10 +72,10 @@ class ChemicalElementMappingModule(OptionsModule):
         return OptionsModule.get_module(self, request)
 
     def _get_display(self, request):
-        return self.options.values()[0] + ' is selected'
+        return list(self.options.values())[0] + ' is selected'
 
     def _get_result(self, request):
-        return self.options.keys()[0]
+        return list(self.options.keys())[0]
 
     def _post_display(self, request):
         data = str(request.POST['data'])

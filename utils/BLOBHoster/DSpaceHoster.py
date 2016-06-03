@@ -11,7 +11,7 @@
 #
 ################################################################################
 
-from BLOBHoster import BLOBHoster
+from .BLOBHoster import BLOBHoster
     
 class DSpaceHoster(BLOBHoster):
     

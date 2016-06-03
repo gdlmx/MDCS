@@ -468,7 +468,7 @@ class XMLdata():
         else:
             full_text_query = {'schema' : {'$in': templatesID} } 
         
-        if len(refinements.keys()) > 0:
+        if len(list(refinements.keys())) > 0:
             full_text_query.update(refinements)
             
         cursor = xmldata.find(full_text_query, as_class = OrderedDict)

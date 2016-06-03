@@ -20,14 +20,13 @@
 from abc import ABCMeta, abstractmethod
 import os
 
-class Exporter(object):
+class Exporter(object, metaclass=ABCMeta):
     """
     Export data to different formats
     This class contains 2 principal methods:
         - transform: transforms a XML to another format
         - transformAndZIp: transforms all XML given in parameter and Zip all
     """
-    __metaclass__ = ABCMeta
 
     def __init__(self):
         """

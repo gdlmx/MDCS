@@ -50,7 +50,7 @@ def sort_dict(o):
 		return o
 
 	new_o = copy.deepcopy(o)
-	for k, v in new_o.items():
+	for k, v in list(new_o.items()):
 		new_o[k] = sort_dict(v)
 
 	return tuple(frozenset(sorted(new_o.items())))

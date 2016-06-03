@@ -1,9 +1,9 @@
-import XSDhash
+from . import XSDhash
 import unittest
 
 class TestSimpleXSD(unittest.TestCase):
 	def setUp(self):
-		print "In method", self._testMethodName
+		print("In method", self._testMethodName)
 		file = open('chemical-element.xsd','r')
 		self.content = file.read()
 		self.hash = XSDhash.get_hash(self.content)
@@ -13,8 +13,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('chemical-element.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 		
 	def test_spaces(self):
@@ -22,8 +22,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('spaces-in-element.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 	
 	def test_spaces2(self):
@@ -31,8 +31,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('spaces-return-tab.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 		
 	def test_comments(self):
@@ -40,8 +40,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('different-comments.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 
 	def test_different_annotations(self):
@@ -49,8 +49,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('different-annotation.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 		
 	def test_different_annotations_levels(self):
@@ -58,8 +58,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('annotations-levels.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 	
 	def test_different_namespace(self):
@@ -67,8 +67,8 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('namespace.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertNotEqual(self.hash, hash)
 	
 	def test_wrong_enum(self):
@@ -76,13 +76,13 @@ class TestSimpleXSD(unittest.TestCase):
 		file = open('wrong-enum.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertNotEqual(self.hash, hash)
 
 class TestComplexXSD(unittest.TestCase):
 	def setUp(self):
-		print "In method", self._testMethodName
+		print("In method", self._testMethodName)
 		file = open('composition.xsd','r')
 		self.content = file.read()
 		self.hash = XSDhash.get_hash(self.content)
@@ -92,8 +92,8 @@ class TestComplexXSD(unittest.TestCase):
 		file = open('composition.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 
 	def test_order(self):
@@ -101,8 +101,8 @@ class TestComplexXSD(unittest.TestCase):
 		file = open('order.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 		
 	def test_root(self):
@@ -110,8 +110,8 @@ class TestComplexXSD(unittest.TestCase):
 		file = open('root-name.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertNotEqual(self.hash, hash)
 
 	def test_type(self):
@@ -119,13 +119,13 @@ class TestComplexXSD(unittest.TestCase):
 		file = open('type-name.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertNotEqual(self.hash, hash)
 		
 class TestMoreComplexXSD(unittest.TestCase):
 	def setUp(self):
-		print "In method", self._testMethodName
+		print("In method", self._testMethodName)
 		file = open('demo.diffusion.xsd','r')
 		self.content = file.read()
 		self.hash = XSDhash.get_hash(self.content)
@@ -135,8 +135,8 @@ class TestMoreComplexXSD(unittest.TestCase):
 		file = open('demo.diffusion.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 
 	def test_order(self):
@@ -144,8 +144,8 @@ class TestMoreComplexXSD(unittest.TestCase):
 		file = open('order2.xsd','r')
 		content = file.read()
 		hash = XSDhash.get_hash(content)
-		print "self.hash: " + self.hash
-		print "hash: " + hash
+		print("self.hash: " + self.hash)
+		print("hash: " + hash)
 		self.assertEqual(self.hash, hash)
 	
 if __name__ == '__main__':

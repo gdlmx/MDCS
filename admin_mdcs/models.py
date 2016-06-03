@@ -19,7 +19,7 @@ from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import resolve_url
-from urlparse import urlparse
+from urllib.parse import urlparse
 from django.utils import six
 from django.core.exceptions import PermissionDenied
 import mgi.rights as RIGHTS

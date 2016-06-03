@@ -1,4 +1,4 @@
-import urls
+from . import urls
 import re
 from mgi.models import Exporter, Template
 from mongoengine.errors import ValidationError
@@ -72,7 +72,7 @@ def discover_exporter():
                 currentExporter = None
                 try:
                     currentExporter = Exporter.objects.get(name=pattern['name'])
-                except Exception, e:
+                except Exception as e:
                     pass
 
                 update = Exporter.objects.filter(name=pattern['name']).update(set__url=pattern['view'], set__name=pattern['name'], set__available_for_all = pattern['available_for_all'], upsert=True, full_result=True)
@@ -80,15 +80,15 @@ def discover_exporter():
                     list_add_exporters.append(pattern['name'])
                     #Check if this new exporter is available for all. If yes, we add this exporter by default for all templates
                     if pattern['available_for_all'] == True:
-                        Template.objects.all().update(push__exporters=update[u'upserted'])
+                        Template.objects.all().update(push__exporters=update['upserted'])
                 else:
                     if pattern['available_for_all'] == True and currentExporter.available_for_all == False:
                         Template.objects(exporters__nin=[currentExporter]).update(push__exporters=currentExporter)
 
                     list_update_exporters.append(pattern['name'])
 
-            except Exception, e:
-                print('ERROR : Impossible to load the following exporter, class not found : ' + pattern['view'])
+            except Exception as e:
+                print(('ERROR : Impossible to load the following exporter, class not found : ' + pattern['view']))
 
         #If there is an old exporter, we delete it.
         list_exporters = Exporter.objects.all().values_list("name")
@@ -98,7 +98,7 @@ def discover_exporter():
 
     except ValidationError as e:
         raise ModuleError('A validation error occured during the exporter discovery :'+ e._get_message())
-    except Exception, e:
+    except Exception as e:
         raise e
 
 

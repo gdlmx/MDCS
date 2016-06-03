@@ -1,4 +1,4 @@
-from models import BlobHosterModule, RawXMLModule, HandleModule,\
+from .models import BlobHosterModule, RawXMLModule, HandleModule,\
     RemoteBlobHosterModule, AdvancedBlobHosterModule
 
 

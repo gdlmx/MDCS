@@ -14,9 +14,7 @@
 
 from abc import ABCMeta, abstractmethod
 
-class BLOBHoster(object):
-    
-    __metaclass__ = ABCMeta
+class BLOBHoster(object, metaclass=ABCMeta):
     
     def __init__(self, BLOB_HOSTER_URI, BLOB_HOSTER_USER, BLOB_HOSTER_PSWD):
         self.BLOB_HOSTER_URI = BLOB_HOSTER_URI
