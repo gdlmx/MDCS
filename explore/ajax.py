@@ -986,7 +986,7 @@ def get_results_by_instance_keyword(request):
             if not onlySuggestions:
                 custom_xslt = False
                 results.append({'title':instanceResult['title'], 'content':xmltodict.unparse(instanceResult['content']),'id':str(instanceResult['_id'])})
-                dom = etree.XML(str(xmltodict.unparse(instanceResult['content']).encode('utf-8')))
+                dom = etree.XML(xmltodict.unparse(instanceResult['content']).encode('utf-8'))
                 #Check if a custom list result XSLT has to be used
                 try:
                     schema = Template.objects.get(pk=instanceResult['schema'])
@@ -1086,7 +1086,7 @@ def get_results_by_instance(request):
                     custom_xslt = False
                     results.append({'title':instanceResult['title'], 'content':xmltodict.unparse(instanceResult['content']),'id':str(instanceResult['_id'])})
                     #dom = etree.fromstring(str(xmltodict.unparse(instanceResult['content']).replace('<?xml version="1.0" encoding="utf-8"?>\n',"")))
-                    dom = etree.XML(str(xmltodict.unparse(instanceResult['content']).encode('utf-8')))
+                    dom = etree.XML(xmltodict.unparse(instanceResult['content']).encode('utf-8'))
                     #Check if a custom list result XSLT has to be used
                     try:
                         schema = Template.objects.get(pk=instanceResult['schema'])
@@ -1130,7 +1130,7 @@ def get_results_by_instance(request):
                 for instanceResult in instanceResults:
                     custom_xslt = False
                     results.append({'title':instanceResult['title'], 'content':instanceResult['content'],'id':str(instanceResult['_id'])})
-                    dom = etree.XML(str(xmltodict.unparse(instanceResult['content']).encode('utf-8')))
+                    dom = etree.XML(xmltodict.unparse(instanceResult['content']).encode('utf-8'))
                     #Check if a custom list result XSLT has to be used
                     try:
                         schema = Template.objects.get(pk=instanceResult['schema'])
@@ -1602,7 +1602,7 @@ def add_field(request):
     #insert before the 3 buttons (save, clear, execute)
     htmlTree.insert(-3,element)   
     
-    response_dict = {'queryForm': html.tostring(htmlTree)}
+    response_dict = {'queryForm': html.tostring(htmlTree).decode('utf-8')}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
 
@@ -1652,7 +1652,7 @@ def remove_field(request):
     except:
         pass
 
-    response_dict = {'queryForm': html.tostring(htmlTree)}
+    response_dict = {'queryForm': html.tostring(htmlTree).decode('utf-8')}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
 ################################################################################
@@ -2095,7 +2095,7 @@ def update_user_inputs(request):
         userInputs.append(form)
         userInputs.append(inputs)
         
-    response_dict = {'queryForm': html.tostring(htmlTree)}
+    response_dict = {'queryForm': html.tostring(htmlTree).decode('utf-8')}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     
@@ -2169,7 +2169,7 @@ def add_saved_query_to_form(request):
     mapCriterias['crit'+ str(tagID)] = criteriaInfo.__to_json__() 
     request.session['mapCriteriasExplore'] = mapCriterias
 
-    response_dict = {'queryForm': html.tostring(queryTree)}
+    response_dict = {'queryForm': html.tostring(queryTree).decode('utf-8')}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
     
     
@@ -2222,7 +2222,7 @@ def clear_criterias(request):
     
     request.session['mapCriteriasExplore'] = dict()
 
-    response_dict = {'queryForm': html.tostring(queryTree)}
+    response_dict = {'queryForm': html.tostring(queryTree).decode('utf-8')}
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
 
@@ -2342,7 +2342,7 @@ def save_custom_data(request):
     createCustomTreeForQuery(request, htmlTree)
     anyChecked = request.session['anyCheckedExplore']
     if (anyChecked):
-        request.session['customFormStringExplore'] = html.tostring(htmlTree)
+        request.session['customFormStringExplore'] = html.tostring(htmlTree).decode('utf-8')
     else:
         request.session['customFormStringExplore'] = ""
     

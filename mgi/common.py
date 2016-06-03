@@ -89,9 +89,9 @@ def validateXMLDocument(templateID, xmlString):
     xmlTree = etree.parse(BytesIO(xmlDocData.encode('utf-8')))
     
     xmlSchema = etree.XMLSchema(xmlTree)    
-    xmlDoc = etree.XML(str(xmlString.encode('utf-8')))
-    prettyXMLString = etree.tostring(xmlDoc, pretty_print=True)  
-    xmlSchema.assertValid(etree.parse(BytesIO(prettyXMLString)))
+    xmlDoc = etree.XML(xmlString.encode('utf-8'))
+    # prettyXMLString
+    xmlSchema.assertValid(etree.parse(BytesIO(etree.tostring(xmlDoc, pretty_print=True))))
     
 
 ################################################################################

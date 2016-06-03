@@ -1587,7 +1587,7 @@ def remove(request):
         # remove element from database
         form_element.delete()
         del form_data.elements[tagID]
-        response_dict = {'xsdForm': html.tostring(htmlTree)}
+        response_dict = {'xsdForm': html.tostring(htmlTree).decode('utf-8')}
 
     return HttpResponse(json.dumps(response_dict), content_type='application/javascript')
 
@@ -1754,7 +1754,7 @@ def generate_absent(request):
         else:
             htmlTree.get_element_by_id("remove" + str(id)).attrib['style'] = 'display:none'
 
-    response_dict['xsdForm'] = html.tostring(htmlTree)
+    response_dict['xsdForm'] = html.tostring(htmlTree).decode('utf-8')
 
     # add new tagID to map
     form_data.elements.update(request.session['mapTagID'])
@@ -2059,7 +2059,7 @@ def duplicate(request):
             else:
                 htmlTree.get_element_by_id("remove" + str(idOfElement)).attrib['style'] = 'display:none'                
 
-        response_dict['xsdForm'] = html.tostring(htmlTree)
+        response_dict['xsdForm'] = html.tostring(htmlTree).decode('utf-8')
 
     # add new tagID to map
     form_data.elements.update(request.session['mapTagID'])
@@ -2108,7 +2108,7 @@ def generateForm(request):
             # set the parser
             etree.set_default_parser(parser=clean_parser)
             # load the XML tree from the text
-            edit_data_tree = etree.XML(str(form_data.xml_data.encode('utf-8')))
+            edit_data_tree = etree.XML(form_data.xml_data.encode('utf-8'))
         else: #no data found, not editing
             request.session['curate_edit'] = False
             
