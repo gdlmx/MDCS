@@ -269,13 +269,13 @@ class XMLdata():
              /!\ Doesn't return the same kind of objects as mongoengine.Document.objects()
         """
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
         # find all objects of the collection
-        cursor = xmldata.find(as_class = OrderedDict)
+        cursor = xmldata.find()
         # build a list with the objects        
         results = []
         for result in cursor:
@@ -290,13 +290,13 @@ class XMLdata():
              /!\ Doesn't return the same kind of objects as mongoengine.Document.objects()
         """
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
         # find all objects of the collection
-        cursor = xmldata.find(params, as_class = OrderedDict)
+        cursor = xmldata.find(params)
         # build a list with the objects        
         results = []
         for result in cursor:
@@ -308,13 +308,13 @@ class XMLdata():
     def executeQuery(query):
         """queries mongo db and returns results data"""
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
         # query mongo db
-        cursor = xmldata.find(query,as_class = OrderedDict)  
+        cursor = xmldata.find(query)  
         # build a list with the xml representation of objects that match the query      
         queryResults = []
         for result in cursor:
@@ -326,13 +326,13 @@ class XMLdata():
     def executeQueryFullResult(query):
         """queries mongo db and returns results data"""
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
         # query mongo db
-        cursor = xmldata.find(query,as_class = OrderedDict)
+        cursor = xmldata.find(query)
         # build a list with the xml representation of objects that match the query
         results = []
         for result in cursor:
@@ -345,12 +345,12 @@ class XMLdata():
             Returns the object with the given id
         """
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
-        return xmldata.find_one({'_id': ObjectId(postID)}, as_class = OrderedDict)
+        return xmldata.find_one({'_id': ObjectId(postID)})
 
 
     @staticmethod
@@ -359,13 +359,13 @@ class XMLdata():
             Returns the object with the given id
         """
         # create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
         xmldata = db['xmldata']
         listIDs = [ObjectId(x) for x in listIDs]
-        return xmldata.find({'_id': { '$in': listIDs }}, as_class = OrderedDict).distinct(distinctBy)
+        return xmldata.find({'_id': { '$in': listIDs }}).distinct(distinctBy)
 
     
     @staticmethod
@@ -454,7 +454,7 @@ class XMLdata():
         Execute a full text query with possible refinements
         """
         #create a connection
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI,document_class=OrderedDict)
         # connect to the db 'mgi'
         db = client['mgi']
         # get the xmldata collection
@@ -471,7 +471,7 @@ class XMLdata():
         if len(list(refinements.keys())) > 0:
             full_text_query.update(refinements)
             
-        cursor = xmldata.find(full_text_query, as_class = OrderedDict)
+        cursor = xmldata.find(full_text_query)
         
         results = []
         for result in cursor:

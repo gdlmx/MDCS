@@ -315,7 +315,7 @@ def explore_detail_result_process(request) :
     #Check if a custom detailed result XSLT has to be used
     try:
         if (xmlString != ""):
-            dom = etree.fromstring(str(xmlString))
+            dom = etree.fromstring(xmlString)
             schema = Template.objects.get(pk=schemaId)
             if schema.ResultXsltDetailed:
                 shortXslt = etree.parse(BytesIO(schema.ResultXsltDetailed.content.encode('utf-8')))
