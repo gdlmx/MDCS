@@ -77,6 +77,9 @@ class Template(Document):
     XSLTFiles = ListField(ReferenceField(ExporterXslt, reverse_delete_rule=PULL))
     ResultXsltList = ReferenceField(ResultXslt, reverse_delete_rule=NULLIFY)
     ResultXsltDetailed = ReferenceField(ResultXslt, reverse_delete_rule=NULLIFY)
+    meta = {'indexes': [
+                    {'fields': ['+title','+version'], 'unique': True, 'sparse': True},
+            ]}
 
 class TemplateVersion(Document):
     """Manages versions of templates"""
