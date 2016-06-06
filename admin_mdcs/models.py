@@ -44,9 +44,10 @@ def add_default_group(sender, **kwargs):
     #We retrieve the user
     user = kwargs["instance"]
     #If it's a creation
-    if kwargs["created"]:
+    if kwargs["created"] and not user.is_superuser:
         group = Group.objects.get(name=default_group)
-        user.groups.add(group)
+        if group:
+          user.groups.add(group)
         user.save()
 
 
