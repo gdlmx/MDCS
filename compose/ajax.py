@@ -227,12 +227,15 @@ def insert_element_sequence(request):
     dom = etree.parse(BytesIO(xmlString.encode('utf-8')))
     
     # get the type to add
-    includedType = Type.objects.get(pk=type_id)
-    typeTree = etree.XML(str(includedType.content))
-    elementType = typeTree.find("{http://www.w3.org/2001/XMLSchema}complexType")
-    if elementType is None:
-        elementType = typeTree.find("{http://www.w3.org/2001/XMLSchema}simpleType")
-    type = elementType.attrib["name"]
+    if type_id and type_id != "__xsd_data_type__":
+        includedType = Type.objects.get(pk=type_id)
+        typeTree = etree.XML(str(includedType.content))
+        elementType = typeTree.find("{http://www.w3.org/2001/XMLSchema}complexType")
+        if elementType is None:
+            elementType = typeTree.find("{http://www.w3.org/2001/XMLSchema}simpleType")
+        type = elementType.attrib["name"]
+    else:
+        type = type_name
     
     # set the element namespace
     xpath = xpath.replace(defaultPrefix +":", namespace)

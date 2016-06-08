@@ -92,7 +92,14 @@ def compose_build_template(request):
                     hasBucket = True
             if hasBucket == False:
                 nobucketsTypes.append(Type.objects.get(pk=type_version.current))
-
+    
+    class dummyType(object):
+        filename=""
+        id      ="__xsd_data_type__"
+        def __init__(s, typename):
+            s.title = 'xsd:'+typename.strip()
+    nobucketsTypes += [dummyType(i) for i in ("string","date","double","decimal",'dateTime',"time",'duration',"float","integer","base64Binary","anyURI","IDREF")]
+    # full list at http://infohost.nmt.edu/tcc/help/pubs/rnc/xsd.html
     context = RequestContext(request, {
        'bucketsTypes': bucketsTypes,
        'nobucketsTypes': nobucketsTypes,
