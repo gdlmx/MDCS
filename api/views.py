@@ -167,19 +167,19 @@ def add_savedquery(request):
     POST http://localhost/rest/saved_queries/add
     POST data user="user", template="template" query="query", displayedQuery="displayedQuery"
     """
-    serializer = resSavedQuerySerializer(data=request.DATA)
+    serializer = resSavedQuerySerializer(data=request.data)
     if serializer.is_valid():
         errors = ""
         try:
-            json_object = json.loads(request.DATA["query"])
+            json_object = json.loads(request.data["query"])
         except ValueError:
             errors += "Invalid query."
         try:
-            template = Template.objects.get(pk=request.DATA["template"])
+            template = Template.objects.get(pk=request.data["template"])
         except Exception:
             errors += "Unknown template."
         try:
-            user = User.objects.get(pk=request.DATA["user"])
+            user = User.objects.get(pk=request.data["user"])
         except Exception:
             errors += "Unknown user."
 
@@ -188,7 +188,7 @@ def add_savedquery(request):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            SavedQuery(user=request.DATA["user"],template=request.DATA["template"],query=request.DATA["query"],displayedQuery=request.DATA["displayedQuery"]).save()
+            SavedQuery(user=request.data["user"],template=request.data["template"],query=request.data["query"],displayedQuery=request.data["displayedQuery"]).save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             content = {'message':str(e)}
@@ -446,14 +446,14 @@ def query_by_example(request):
     """
          
     dataformat = None
-    if 'dataformat' in request.DATA:
-        dataformat = request.DATA['dataformat']
+    if 'dataformat' in request.data:
+        dataformat = request.data['dataformat']
     
-    qSerializer = querySerializer(data=request.DATA)
+    qSerializer = querySerializer(data=request.data)
     if qSerializer.is_valid():
-        if 'repositories' in request.DATA:
+        if 'repositories' in request.data:
             instanceResults = []
-            repositories = request.DATA['repositories'].strip().split(",")
+            repositories = request.data['repositories'].strip().split(",")
             if len(repositories) == 0:
                 content = {'message':'Repositories keyword found but the list is empty.'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -472,7 +472,7 @@ def query_by_example(request):
                             return Response(content, status=status.HTTP_400_BAD_REQUEST)
                 if local:
                     try:
-                        query = eval(request.DATA['query'])
+                        query = eval(request.data['query'])
                         manageRegexInAPI(query)
                         instanceResults = instanceResults + XMLdata.executeQueryFullResult(query)                        
                     except:
@@ -480,7 +480,7 @@ def query_by_example(request):
                         return Response(content, status=status.HTTP_400_BAD_REQUEST)
                 for instance in instances:
                     url = instance.protocol + "://" + instance.address + ":" + str(instance.port) + "/rest/explore/query-by-example"   
-                    query = request.DATA['query']              
+                    query = request.data['query']              
                     data = {"query":query}
                     headers = {'Authorization': 'Bearer ' + instance['access_token']}
                     r = requests.post(url, data=data, headers=headers)
@@ -500,7 +500,7 @@ def query_by_example(request):
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
             try:
-                query = eval(request.DATA['query'])
+                query = eval(request.data['query'])
                 manageRegexInAPI(query)
                 results = XMLdata.executeQueryFullResult(query)
             
@@ -540,10 +540,10 @@ def curate(request):
     POST http://localhost/rest/curate
     POST data title="title", schema="schemaID", content="<root>...</root>"
     """        
-    serializer = jsonDataSerializer(data=request.DATA)
+    serializer = jsonDataSerializer(data=request.data)
     if serializer.is_valid():
         try:
-            schema = Template.objects.get(pk=ObjectId(request.DATA['schema']))
+            schema = Template.objects.get(pk=ObjectId(request.data['schema']))
             templateVersion = TemplateVersion.objects.get(pk=ObjectId(schema.templateVersion))
             if str(schema.id) in templateVersion.deletedVersions:
                 content = {'message: The provided template is currently deleted.'}
@@ -552,7 +552,7 @@ def curate(request):
             content = {'message: No template found with the given id.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
-        xmlStr = request.DATA['content']
+        xmlStr = request.data['content']
         docID = None
         try:
             try:
@@ -564,7 +564,7 @@ def curate(request):
             except Exception as e:
                 content = {'message':str(e)}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
-            jsondata = XMLdata(schemaID = request.DATA['schema'], xml = xmlStr, title = request.DATA['title'])
+            jsondata = XMLdata(schemaID = request.data['schema'], xml = xmlStr, title = request.data['title'])
             docID = jsondata.save()            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except:
@@ -595,9 +595,9 @@ def add_schema(request):
     xsdFlatContent = None
     xsdAPIContent = None
 
-    sSerializer = schemaSerializer(data=request.DATA)
+    sSerializer = schemaSerializer(data=request.data)
     if sSerializer.is_valid():
-        xsdContent = request.DATA['content']
+        xsdContent = request.data['content']
 
         # is this a valid XMl document?
         try:
@@ -616,8 +616,8 @@ def add_schema(request):
         idxInclude = 0
         dependencies = []
 
-        if 'dependencies[]' in request.DATA:
-            dependencies = request.DATA['dependencies[]'].strip().split(",")
+        if 'dependencies[]' in request.data:
+            dependencies = request.data['dependencies[]'].strip().split(",")
             if len(dependencies) == len(includes):
                 listTypesId = []
                 for typeId in Type.objects.all().values_list('id'):
@@ -658,15 +658,15 @@ def add_schema(request):
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         # a template version is provided: if it exists, add the schema as a new version and manage the version numbers
-        if "templateVersion" in request.DATA:
+        if "templateVersion" in request.data:
             try:
-                templateVersions = TemplateVersion.objects.get(pk=request.DATA['templateVersion'])
+                templateVersions = TemplateVersion.objects.get(pk=request.data['templateVersion'])
                 if templateVersions.isDeleted == True:
                     content = {'message':'This template version belongs to a deleted template. You are not allowed to add a template to it.'}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
                 templateVersions.nbVersions = templateVersions.nbVersions + 1
                 hash = XSDhash.get_hash(xsdContent)
-                newTemplate = Template(title=request.DATA['title'], filename=request.DATA['filename'], content=xsdContent, templateVersion=request.DATA['templateVersion'], version=templateVersions.nbVersions, hash=hash, dependencies=dependencies).save()
+                newTemplate = Template(title=request.data['title'], filename=request.data['filename'], content=xsdContent, templateVersion=request.data['templateVersion'], version=templateVersions.nbVersions, hash=hash, dependencies=dependencies).save()
                 templateVersions.versions.append(str(newTemplate.id))
                 templateVersions.save()
                 # Save Meta schema
@@ -678,7 +678,7 @@ def add_schema(request):
         else:
             templateVersion = TemplateVersion(nbVersions=1, isDeleted=False).save()
             hash = XSDhash.get_hash(xsdContent)
-            newTemplate = Template(title=request.DATA['title'], filename=request.DATA['filename'], content=xsdContent, version=1, templateVersion=str(templateVersion.id), hash=hash, dependencies=dependencies).save()
+            newTemplate = Template(title=request.data['title'], filename=request.data['filename'], content=xsdContent, version=1, templateVersion=str(templateVersion.id), hash=hash, dependencies=dependencies).save()
             templateVersion.versions = [str(newTemplate.id)]
             templateVersion.current=str(newTemplate.id)
             templateVersion.save()
@@ -1049,9 +1049,9 @@ def add_type(request):
     xsdFlatContent = None
     xsdAPIContent = None
 
-    oSerializer = typeSerializer(data=request.DATA)
+    oSerializer = typeSerializer(data=request.data)
     if oSerializer.is_valid():
-        xsdContent = request.DATA['content']
+        xsdContent = request.data['content']
 
         # is this a valid XMl document?
         try:
@@ -1071,8 +1071,8 @@ def add_type(request):
         idxInclude = 0
         dependencies = []
 
-        if 'dependencies[]' in request.DATA:
-            dependencies = request.DATA['dependencies[]'].strip().split(",")
+        if 'dependencies[]' in request.data:
+            dependencies = request.data['dependencies[]'].strip().split(",")
             if len(dependencies) == len(includes):
                 listTypesId = []
                 for typeId in Type.objects.all().values_list('id'):
@@ -1115,15 +1115,15 @@ def add_type(request):
 
 
         # a type version is provided: if it exists, add the type as a new version and manage the version numbers
-        if "typeVersion" in request.DATA:
+        if "typeVersion" in request.data:
             try:
-                typeVersions = TypeVersion.objects.get(pk=request.DATA['typeVersion'])
+                typeVersions = TypeVersion.objects.get(pk=request.data['typeVersion'])
                 if typeVersions.isDeleted == True:
                     content = {'message':'This type version belongs to a deleted type. You can not add a type to it.'}
                     return Response(content, status=status.HTTP_400_BAD_REQUEST)
                 typeVersions.nbVersions = typeVersions.nbVersions + 1
                 hash = XSDhash.get_hash(xsdContent)
-                newType = Type(title=request.DATA['title'], filename=request.DATA['filename'], content=request.DATA['content'], typeVersion=request.DATA['typeVersion'], version=typeVersions.nbVersions, hash=hash, dependencies=dependencies).save()
+                newType = Type(title=request.data['title'], filename=request.data['filename'], content=request.data['content'], typeVersion=request.data['typeVersion'], version=typeVersions.nbVersions, hash=hash, dependencies=dependencies).save()
                 typeVersions.versions.append(str(newType.id))
                 typeVersions.save()
                 # Save Meta schema
@@ -1135,7 +1135,7 @@ def add_type(request):
         else:
             typeVersion = TypeVersion(nbVersions=1, isDeleted=False).save()
             hash = XSDhash.get_hash(xsdContent)
-            newType = Type(title=request.DATA['title'], filename=request.DATA['filename'], content=request.DATA['content'], version=1, typeVersion=str(typeVersion.id), hash=hash, dependencies=dependencies).save()
+            newType = Type(title=request.data['title'], filename=request.data['filename'], content=request.data['content'], version=1, typeVersion=str(typeVersion.id), hash=hash, dependencies=dependencies).save()
             typeVersion.versions = [str(newType.id)]
             typeVersion.current=str(newType.id)
             typeVersion.save()
@@ -1586,34 +1586,34 @@ def add_repository(request):
     POST data name="name", protocol="protocol", address="address", port=port, user="user", password="password", client_id="client_id", client_secret="client_secret"
     """
     # if request.user.is_staff is True:
-    iSerializer = newInstanceSerializer(data=request.DATA)
+    iSerializer = newInstanceSerializer(data=request.data)
     if iSerializer.is_valid():
         errors = ""
         # test if the protocol is HTTP or HTTPS
-        if request.DATA['protocol'].upper() not in ['HTTP','HTTPS']:
+        if request.data['protocol'].upper() not in ['HTTP','HTTPS']:
             errors += 'Allowed protocol are HTTP and HTTPS.'
         # test if the name is "Local"
-        if (request.DATA['name'] == ""):
+        if (request.data['name'] == ""):
             errors += "The name cannot be empty."
-        elif (request.DATA['name'].upper() == "LOCAL"):
+        elif (request.data['name'].upper() == "LOCAL"):
             errors += 'By default, the instance named Local is the instance currently running.'
         else:
             # test if an instance with the same name exists
-            instance = Instance.objects(name=request.DATA['name'])
+            instance = Instance.objects(name=request.data['name'])
             if len(instance) != 0:
                 errors += "An instance with the same name already exists."
         regex = re.compile("^[0-9]{1,5}$")
-        if not regex.match(str(request.DATA['port'])):
+        if not regex.match(str(request.data['port'])):
             errors += "The port number is not valid."
         regex = re.compile("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-        if not regex.match(request.DATA['address']):
+        if not regex.match(request.data['address']):
             errors += "The address is not valid."
         # test if new instance is not the same as the local instance
-        if request.DATA['address'] == request.META['REMOTE_ADDR'] and str(request.DATA['port']) == request.META['SERVER_PORT']:
+        if request.data['address'] == request.META['REMOTE_ADDR'] and str(request.data['port']) == request.META['SERVER_PORT']:
             errors += "The address and port you entered refer to the instance currently running."
         else:
             # test if an instance with the same address/port exists
-            instance = Instance.objects(address=request.DATA['address'], port=request.DATA['port'])
+            instance = Instance.objects(address=request.data['address'], port=request.data['port'])
             if len(instance) != 0:
                 errors += "An instance with the address/port already exists."
 
@@ -1623,15 +1623,15 @@ def add_repository(request):
 
 
         try:
-            url = request.DATA["protocol"] + "://" + request.DATA["address"] + ":" + request.DATA["port"] + "/o/token/"
-            data="grant_type=password&username=" + request.DATA["user"] + "&password=" + request.DATA["password"]
+            url = request.data["protocol"] + "://" + request.data["address"] + ":" + request.data["port"] + "/o/token/"
+            data="grant_type=password&username=" + request.data["user"] + "&password=" + request.data["password"]
             headers = {'content-type': 'application/x-www-form-urlencoded'}
-            r = requests.post(url=url,data=data, headers=headers,  auth=(request.DATA["client_id"], request.DATA["client_secret"]))
+            r = requests.post(url=url,data=data, headers=headers,  auth=(request.data["client_id"], request.data["client_secret"]))
             if r.status_code == 200:
                 now = datetime.now()
                 delta = timedelta(seconds=int(eval(r.content)["expires_in"]))
                 expires = now + delta
-                instance = Instance(name=request.DATA["name"], protocol=request.DATA["protocol"], address=request.DATA["address"], port=request.DATA["port"], access_token=eval(r.content)["access_token"], refresh_token=eval(r.content)["refresh_token"], expires=expires).save()
+                instance = Instance(name=request.data["name"], protocol=request.data["protocol"], address=request.data["address"], port=request.data["port"], access_token=eval(r.content)["access_token"], refresh_token=eval(r.content)["refresh_token"], expires=expires).save()
             else:
                 errors += "Unable to get access to the remote instance using these parameters."
         except Exception:
@@ -1772,20 +1772,20 @@ def add_user(request):
     POST http://localhost/rest/users/add
     POST data username="username", password="password" first_name="first_name", last_name="last_name", port=port, email="email"
     """
-    serializer = insertUserSerializer(data=request.DATA)
+    serializer = insertUserSerializer(data=request.data)
     if serializer.is_valid():
-        username = request.DATA['username']
-        password = request.DATA['password']
-        if 'first_name' in request.DATA:
-            first_name = request.DATA['first_name']
+        username = request.data['username']
+        password = request.data['password']
+        if 'first_name' in request.data:
+            first_name = request.data['first_name']
         else:
             first_name = ""
-        if 'last_name' in request.DATA:
-            last_name = request.DATA['last_name']
+        if 'last_name' in request.data:
+            last_name = request.data['last_name']
         else:
             last_name = ""
-        if 'email' in request.DATA:
-            email = request.DATA['email']
+        if 'email' in request.data:
+            email = request.data['email']
         else:
             email = ""
         try:
@@ -1862,15 +1862,15 @@ def update_user(request):
         content = {'message':'No username provided to restore.'}
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = updateUserSerializer(data=request.DATA)
+    serializer = updateUserSerializer(data=request.data)
     if serializer.is_valid():
         try:
-            if 'first_name' in request.DATA:
-                user.first_name = request.DATA['first_name']
-            if 'last_name' in request.DATA:
-                user.last_name = request.DATA['last_name']
-            if 'email' in request.DATA:
-                user.email = request.DATA['email']
+            if 'first_name' in request.data:
+                user.first_name = request.data['first_name']
+            if 'last_name' in request.data:
+                user.last_name = request.data['last_name']
+            if 'email' in request.data:
+                user.email = request.data['email']
             user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -2107,9 +2107,9 @@ def add_xslt(request):
     POST http://localhost/rest/exporter/xslt/add
     POST data name="name", filename="filename", content="...", available_for_all="True or False"
     """
-    serializer = jsonXSLTSerializer(data=request.DATA)
+    serializer = jsonXSLTSerializer(data=request.data)
     if serializer.is_valid():
-        xmlStr = request.DATA['content']
+        xmlStr = request.data['content']
         try:
             try:
                 etree.XML(xmlStr.encode('utf-8'))
@@ -2118,8 +2118,8 @@ def add_xslt(request):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                available = request.DATA['available_for_all'] == 'True'
-                jsondata = ExporterXslt(name=request.DATA['name'], filename=request.DATA['filename'], content=request.DATA['content'], available_for_all=available)
+                available = request.data['available_for_all'] == 'True'
+                jsondata = ExporterXslt(name=request.data['name'], filename=request.data['filename'], content=request.data['content'], available_for_all=available)
                 docID = jsondata.save()
                 #IF it's available for all templates, we add the reference for all templates using the XSLT exporter
                 if available:
@@ -2193,15 +2193,15 @@ def export(request):
     POST data files[]="fileID,fileID,...", exporter="exporterID", dataformat: [json,zip]
     """
     dataXML = []
-    serializer = jsonExportSerializer(data=request.DATA)
+    serializer = jsonExportSerializer(data=request.data)
     if serializer.is_valid():
         #We retrieve files to export
         try:
             files = []
-            filesId = re.sub('[\s+]', '', request.DATA['files[]']).split(",")
-            idExporter = request.DATA['exporter']
-            if "dataformat" in request.DATA:
-                dataformat = request.DATA['dataformat']
+            filesId = re.sub('[\s+]', '', request.data['files[]']).split(",")
+            idExporter = request.data['exporter']
+            if "dataformat" in request.data:
+                dataformat = request.data['dataformat']
             else:
                 dataformat =  None
             for fileId in filesId:
