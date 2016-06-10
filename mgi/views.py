@@ -142,6 +142,15 @@ def my_profile(request):
     context = RequestContext(request, {
         '': '',
     })
+    # generage API key
+    # http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+    try:
+      if (request.GET['api-key']=='true'):
+        from rest_framework.authtoken.models import Token
+        token, created = Token.objects.get_or_create(user=request.user)
+        context.push({ 'api_key': token.key })
+    except KeyError:
+        pass
     return HttpResponse(template.render(context))
 
 

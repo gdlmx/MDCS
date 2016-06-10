@@ -72,5 +72,15 @@
         <td><b>Date Joined:</b></td>
         <td>{{ user.date_joined }}</td>
     </tr>
+    <tr>
+        <td><b>API Key:</b></td>
+        <td>
+          {% if api_key %}
+            {{ api_key }}
+          {% else %}
+            <a href="/my-profile?api-key=true">get my token</a>
+          {% endif %}
+        </td>
+    </tr>
 </table>
 {% endblock %}

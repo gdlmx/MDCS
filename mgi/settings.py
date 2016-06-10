@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
 #    'mongoengine.django.mongo_auth',
     'rest_framework',
     'rest_framework_swagger',
